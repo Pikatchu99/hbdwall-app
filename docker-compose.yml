@@ -1,0 +1,99 @@
+services:
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: hbdwall
+      POSTGRES_USER: hbdwall
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hbdwall"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  migrate:
+    build: .
+    restart: no
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://hbdwall:${POSTGRES_PASSWORD}@postgres:5432/hbdwall
+      DIRECT_DATABASE_URL: postgresql://hbdwall:${POSTGRES_PASSWORD}@postgres:5432/hbdwall
+    networks:
+      - internal
+    entrypoint: ["sh", "-c", "node_modules/.bin/prisma db push --schema=prisma/schema.prisma --accept-data-loss --url=postgresql://hbdwall:${POSTGRES_PASSWORD}@postgres:5432/hbdwall && node_modules/.bin/prisma db execute --file=prisma/backfill-editions.sql"]
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    environment:
+      DATABASE_URL: postgresql://hbdwall:${POSTGRES_PASSWORD}@postgres:5432/hbdwall
+      DIRECT_DATABASE_URL: postgresql://hbdwall:${POSTGRES_PASSWORD}@postgres:5432/hbdwall
+      SESSION_SECRET: ${SESSION_SECRET}
+      R2_ACCOUNT_ID: ${R2_ACCOUNT_ID}
+      R2_ACCESS_KEY_ID: ${R2_ACCESS_KEY_ID}
+      R2_SECRET_ACCESS_KEY: ${R2_SECRET_ACCESS_KEY}
+      R2_BUCKET_NAME: ${R2_BUCKET_NAME}
+      R2_PUBLIC_URL: ${R2_PUBLIC_URL}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      AUTH_SECRET: ${AUTH_SECRET}
+      NEXTAUTH_URL: ${NEXTAUTH_URL}
+      NEXT_PUBLIC_VAPID_PUBLIC_KEY: ${NEXT_PUBLIC_VAPID_PUBLIC_KEY}
+      VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY}
+      VAPID_MAILTO: ${VAPID_MAILTO}
+      PORT: 8741
+      HOSTNAME: "0.0.0.0"
+    ports:
+      - "127.0.0.1:8741:8741"
+    networks:
+      - internal
+      - web
+
+  cron:
+    image: alpine:3.19
+    restart: unless-stopped
+    depends_on:
+      - app
+    environment:
+      CRON_SECRET: ${CRON_SECRET}
+    entrypoint: ["sh", "-c", "apk add --no-cache curl && echo '0 8 * * * curl -s -X POST http://app:8741/api/cron/birthday -H \"x-cron-secret: $CRON_SECRET\"' | crontab - && crond -f -d 8"]
+    networks:
+      - internal
+
+  backup:
+    image: alpine:3.19
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    environment:
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+      AWS_ACCESS_KEY_ID: ${R2_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${R2_SECRET_ACCESS_KEY}
+      R2_ACCOUNT_ID: ${R2_ACCOUNT_ID}
+      R2_BUCKET_NAME: ${R2_BUCKET_NAME}
+    volumes:
+      - ./scripts/backup.sh:/backup.sh:ro
+    networks:
+      - internal
+    entrypoint: ["sh", "-c", "apk add --no-cache postgresql16-client aws-cli && chmod +x /backup.sh && crond -f -d 8"]
+
+volumes:
+  pgdata:
+
+networks:
+  internal:
+    internal: true
+  web:

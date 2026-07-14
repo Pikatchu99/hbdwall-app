@@ -1,0 +1,132 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-06-28T00:00:00.000Z",
+  "title": "Design System: HBDWall — Sable Joyeux",
+  "extensions": {
+    "colorMeta": {
+      "violet":  { "role": "primary",   "displayName": "Fête Violet",      "canonical": "oklch(0.60 0.23 295)", "tonalRamp": ["oklch(0.22 0.10 295)","oklch(0.34 0.16 295)","oklch(0.46 0.21 295)","oklch(0.60 0.23 295)","oklch(0.72 0.18 295)","oklch(0.84 0.11 295)","oklch(0.92 0.06 295)","oklch(0.97 0.02 295)"] },
+      "magenta": { "role": "secondary", "displayName": "Confetti Magenta", "canonical": "oklch(0.64 0.26 350)", "tonalRamp": ["oklch(0.24 0.12 350)","oklch(0.37 0.18 350)","oklch(0.50 0.23 350)","oklch(0.64 0.26 350)","oklch(0.75 0.19 350)","oklch(0.85 0.12 350)","oklch(0.92 0.06 350)","oklch(0.97 0.02 350)"] },
+      "blue":    { "role": "secondary", "displayName": "Balloon Blue",     "canonical": "oklch(0.60 0.18 250)", "tonalRamp": ["oklch(0.24 0.08 250)","oklch(0.36 0.12 250)","oklch(0.48 0.16 250)","oklch(0.60 0.18 250)","oklch(0.72 0.14 250)","oklch(0.83 0.09 250)","oklch(0.91 0.05 250)","oklch(0.97 0.02 250)"] },
+      "orange":  { "role": "secondary", "displayName": "Sunset Orange",    "canonical": "oklch(0.72 0.19 47)",  "tonalRamp": ["oklch(0.30 0.09 47)","oklch(0.43 0.13 47)","oklch(0.57 0.17 47)","oklch(0.72 0.19 47)","oklch(0.82 0.15 47)","oklch(0.89 0.10 47)","oklch(0.94 0.05 47)","oklch(0.98 0.02 47)"] },
+      "yellow":  { "role": "secondary", "displayName": "Birthday Yellow",  "canonical": "oklch(0.90 0.17 100)", "tonalRamp": ["oklch(0.40 0.09 100)","oklch(0.55 0.12 100)","oklch(0.70 0.15 100)","oklch(0.82 0.17 100)","oklch(0.90 0.17 100)","oklch(0.94 0.12 100)","oklch(0.97 0.06 100)","oklch(0.99 0.02 100)"] },
+      "lime":    { "role": "secondary", "displayName": "Party Lime",       "canonical": "oklch(0.86 0.21 132)", "tonalRamp": ["oklch(0.38 0.10 132)","oklch(0.52 0.14 132)","oklch(0.66 0.18 132)","oklch(0.78 0.21 132)","oklch(0.86 0.21 132)","oklch(0.92 0.14 132)","oklch(0.96 0.07 132)","oklch(0.99 0.02 132)"] },
+      "ink":     { "role": "neutral",   "displayName": "Ink (violet-tinted near-black)", "canonical": "oklch(0.17 0.03 290)", "tonalRamp": ["oklch(0.13 0.03 290)","oklch(0.20 0.03 290)","oklch(0.30 0.03 290)","oklch(0.42 0.03 290)","oklch(0.56 0.025 290)","oklch(0.70 0.02 290)","oklch(0.84 0.015 290)","oklch(0.95 0.01 290)"] },
+      "paper":   { "role": "neutral",   "displayName": "Paper (warm off-white)", "canonical": "oklch(0.97 0.012 300)", "tonalRamp": ["oklch(0.55 0.02 300)","oklch(0.66 0.018 300)","oklch(0.76 0.016 300)","oklch(0.85 0.014 300)","oklch(0.91 0.013 300)","oklch(0.95 0.012 300)","oklch(0.97 0.012 300)","oklch(0.99 0.008 300)"] }
+    },
+    "typographyMeta": {
+      "display":  { "displayName": "Mega / Display", "purpose": "Hero headlines and the closing CTA. Baloo 2 800, uppercase. One per fold." },
+      "headline": { "displayName": "Headline", "purpose": "Section titles. Baloo 2 800, uppercase." },
+      "body":     { "displayName": "Body", "purpose": "Paragraphs, leads, names, meta. Space Mono. Keep measure under ~45ch." },
+      "label":    { "displayName": "Label / Kicker", "purpose": "Uppercase kickers, badges, sticker tags. Baloo 2 800, tracking 0.14em." }
+    },
+    "shadows": [
+      { "name": "sticker", "value": "8px 8px 0 oklch(0.17 0.03 290)", "purpose": "Default hard offset shadow for cards, steps, notes, color bands. Zero blur." },
+      { "name": "sticker-sm", "value": "4px 4px 0 oklch(0.17 0.03 290)", "purpose": "Pills, badges, tiles, swatches." },
+      { "name": "sticker-lg", "value": "14px 14px 0 oklch(0.17 0.03 290)", "purpose": "Heroes, CTA, spotlight, and the hover/lift state of any card." }
+    ],
+    "motion": [
+      { "name": "ease-standard", "value": "cubic-bezier(0.2, 0.6, 0.2, 1)", "purpose": "Default ease-out for hovers, presses, reveals." },
+      { "name": "press", "value": "translate(3px,3px) + shadow shrink to 1px on :active", "purpose": "Satisfying button click." },
+      { "name": "lift", "value": "translate(-3px,-3px) + shadow grow to sticker-lg on :hover", "purpose": "Card hover." },
+      { "name": "float", "value": "gsap y:-18 + rotation wobble, sine.inOut yoyo infinite", "purpose": "Doodles and note stickers idle motion." },
+      { "name": "marquee", "value": "translateX(0 -> -50%) linear infinite, pause on hover", "purpose": "Testimonial rows." },
+      { "name": "reveal", "value": "gsap from y:44 opacity:0, ScrollTrigger top 86%", "purpose": "Section entrance on scroll." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "520px" },
+      { "name": "md", "value": "760px" },
+      { "name": "lg", "value": "860px" }
+    ],
+    "reducedMotion": "All float / twinkle / marquee / reveal / wordmark animation collapses to a static, fully-legible state under prefers-reduced-motion. Non-negotiable."
+  },
+  "components": [
+    {
+      "name": "Primary Pill Button",
+      "kind": "button",
+      "refersTo": "pill-primary",
+      "description": "Main CTA. Ink fill, hard shadow, presses in on click.",
+      "html": "<button class=\"ds-pill-primary\">Crée ton mur ↗</button>",
+      "css": ".ds-pill-primary { font-family: 'Baloo 2', system-ui, sans-serif; font-weight: 800; font-size: 16px; padding: 14px 26px; border-radius: 999px; border: 3px solid oklch(0.17 0.03 290); background: oklch(0.17 0.03 290); color: oklch(0.97 0.012 300); box-shadow: 4px 4px 0 oklch(0.17 0.03 290); cursor: pointer; transition: transform .13s cubic-bezier(.2,.6,.2,1), box-shadow .13s cubic-bezier(.2,.6,.2,1); } .ds-pill-primary:hover { transform: translate(-2px,-2px); box-shadow: 7px 7px 0 oklch(0.17 0.03 290); } .ds-pill-primary:active { transform: translate(3px,3px); box-shadow: 1px 1px 0 oklch(0.17 0.03 290); }"
+    },
+    {
+      "name": "Secondary Pill Button",
+      "kind": "button",
+      "refersTo": "pill-secondary",
+      "description": "Secondary action. Paper fill, ink border.",
+      "html": "<button class=\"ds-pill-secondary\">Voir un exemple</button>",
+      "css": ".ds-pill-secondary { font-family: 'Baloo 2', system-ui, sans-serif; font-weight: 800; font-size: 16px; padding: 14px 26px; border-radius: 999px; border: 3px solid oklch(0.17 0.03 290); background: oklch(0.97 0.012 300); color: oklch(0.17 0.03 290); box-shadow: 4px 4px 0 oklch(0.17 0.03 290); cursor: pointer; transition: transform .13s cubic-bezier(.2,.6,.2,1), box-shadow .13s cubic-bezier(.2,.6,.2,1); } .ds-pill-secondary:hover { transform: translate(-2px,-2px); box-shadow: 7px 7px 0 oklch(0.17 0.03 290); } .ds-pill-secondary:active { transform: translate(3px,3px); box-shadow: 1px 1px 0 oklch(0.17 0.03 290); }"
+    },
+    {
+      "name": "Feature Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Color-filled card with a tilt at rest that straightens and lifts on hover.",
+      "html": "<article class=\"ds-card\"><span class=\"ds-card-badge\">02</span><h3>Tu gardes tout</h3><p>L'amour rassemblé en un seul endroit. Pour toujours.</p></article>",
+      "css": ".ds-card { position: relative; background: oklch(0.90 0.17 100); color: oklch(0.17 0.03 290); border: 3px solid oklch(0.17 0.03 290); border-radius: 20px; padding: 28px; box-shadow: 8px 8px 0 oklch(0.17 0.03 290); transform: rotate(2deg); transition: transform .15s cubic-bezier(.2,.6,.2,1), box-shadow .15s cubic-bezier(.2,.6,.2,1); } .ds-card:hover { transform: translate(-3px,-3px) rotate(0deg); box-shadow: 14px 14px 0 oklch(0.17 0.03 290); } .ds-card h3 { font-family: 'Baloo 2', system-ui, sans-serif; font-weight: 800; font-size: 26px; line-height: 1; margin: 16px 0 8px; } .ds-card p { font-family: 'Space Mono', monospace; font-size: 14px; line-height: 1.6; margin: 0; } .ds-card-badge { position: absolute; top: -14px; left: 22px; width: 34px; height: 34px; display: grid; place-items: center; border-radius: 999px; border: 3px solid oklch(0.17 0.03 290); background: oklch(0.60 0.23 295); color: #fff; font-family: 'Baloo 2', sans-serif; font-weight: 800; }"
+    },
+    {
+      "name": "Color Badge",
+      "kind": "chip",
+      "refersTo": "badge",
+      "description": "Color-coded step/status pill.",
+      "html": "<span class=\"ds-badge\">ÉTAPE 01</span>",
+      "css": ".ds-badge { display: inline-block; font-family: 'Baloo 2', system-ui, sans-serif; font-weight: 800; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; padding: 5px 12px; border-radius: 999px; border: 3px solid oklch(0.17 0.03 290); background: oklch(0.86 0.21 132); color: oklch(0.17 0.03 290); box-shadow: 4px 4px 0 oklch(0.17 0.03 290); }"
+    },
+    {
+      "name": "Marker Highlight",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Inline highlight box behind an emphasized word in a headline.",
+      "html": "<h2 class=\"ds-h\">3 étapes, et c'est <span class=\"ds-mark\">plié.</span></h2>",
+      "css": ".ds-h { font-family: 'Baloo 2', system-ui, sans-serif; font-weight: 800; text-transform: uppercase; font-size: clamp(32px,5vw,60px); line-height: 1; color: oklch(0.17 0.03 290); } .ds-mark { background: oklch(0.90 0.17 100); color: oklch(0.17 0.03 290); padding: 0 0.14em; border-radius: 8px; display: inline-block; transform: rotate(-2deg); }"
+    },
+    {
+      "name": "Note Sticker",
+      "kind": "card",
+      "refersTo": "note",
+      "description": "Small message card shown in an overlapping floating pile.",
+      "html": "<div class=\"ds-note\"><p class=\"ds-note-msg\">Je suis tellement fière de toi</p><p class=\"ds-note-by\">— Maman</p></div>",
+      "css": ".ds-note { width: 300px; background: oklch(0.90 0.17 100); color: oklch(0.17 0.03 290); border: 3px solid oklch(0.17 0.03 290); border-radius: 16px; padding: 16px 20px; box-shadow: 8px 8px 0 oklch(0.17 0.03 290); transform: rotate(-4deg); transition: transform .15s cubic-bezier(.2,.6,.2,1), box-shadow .15s cubic-bezier(.2,.6,.2,1); } .ds-note:hover { transform: translateY(-5px) rotate(0deg); box-shadow: 14px 14px 0 oklch(0.17 0.03 290); } .ds-note-msg { font-family: 'Baloo 2', sans-serif; font-weight: 700; font-size: 16px; line-height: 1.25; margin: 0; } .ds-note-by { font-family: 'Baloo 2', sans-serif; font-weight: 700; font-size: 12px; opacity: 0.6; margin: 8px 0 0; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Le carnet de stickers (The Sticker Scrapbook)",
+    "overview": "Joyful neo-brutalism for a birthday product. Every element is a hand-cut sticker: thick black ink outlines, a hard un-blurred offset shadow as if peeled and pressed onto the page, a slight playful tilt, and a riot of festive color. Big rounded chunky Baloo 2 type shouts; a mono body speaks; floating SVG doodles and a friendly mascot carry the joy. Color is voice: violet drenches heroes, a full festive palette color-blocks the page. Surfaces are flat and graphic, never glassy or gradient-y. Motion is everywhere but soft, and collapses entirely under reduced-motion.",
+    "keyCharacteristics": [
+      "Thick 3px ink borders on everything",
+      "Hard, zero-blur offset shadows (peeled-sticker depth)",
+      "Generous rounded corners (16-28px) and 999px pills",
+      "Baloo 2 800 display over Space Mono body",
+      "Full festive palette, color-blocked per section",
+      "Playful tilts, marker-highlighted words, animated SVG doodles, a mascot"
+    ],
+    "rules": [
+      { "name": "The Color-Block Rule", "body": "Sections own a color: large saturated fields, not timid accents.", "section": "colors" },
+      { "name": "The Text-On-Color Rule", "body": "Yellow/lime/orange/paper take ink text; violet/magenta/blue/ink take paper text. Never light-on-light.", "section": "colors" },
+      { "name": "The Round-Shouts-Mono-Speaks Rule", "body": "Baloo 2 for joyful/loud (headings, labels, buttons); Space Mono for things being read (body, names, meta).", "section": "typography" },
+      { "name": "The Marker Rule", "body": "Emphasis is one tilted highlight box per headline, never two.", "section": "typography" },
+      { "name": "The Hard Shadow Rule", "body": "Shadows are solid color, zero blur, fixed offset, always ink. Blurred shadows are forbidden.", "section": "elevation" },
+      { "name": "The Press Rule", "body": "Interactive elements move with their shadow: buttons press in on click, cards lift on hover.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do outline everything with a 3px ink border and lift it with a hard offset shadow (8px 8px 0 ink).",
+      "Do color-block by section; let one saturated color own a fold.",
+      "Do set headings/labels/buttons in Baloo 2 800 and body/meta in Space Mono.",
+      "Do emphasize with a single tilted marker highlight per headline.",
+      "Do give cards/badges a small static tilt and straighten on hover; press buttons in on click.",
+      "Do decorate with animated hand-drawn SVG doodles, recolored per section.",
+      "Do keep neutrals tinted toward violet (Ink, Paper).",
+      "Do collapse all motion under prefers-reduced-motion."
+    ],
+    "donts": [
+      "Don't use blurred / ambient shadows. Solid, zero-blur, ink only.",
+      "Don't use glassmorphism, purple-to-blue gradients, neon-on-dark, or gradient text.",
+      "Don't ship thin/timid borders or radius:0 sharp corners (that is legacy classic Sable).",
+      "Don't use pure #000 or #fff; always the tinted Ink/Paper.",
+      "Don't put light text on yellow/lime/paper, or color text on a same-color field.",
+      "Don't use emoji in the UI; use SVG doodles, the mascot, and lucide icons.",
+      "Don't set body copy in Baloo 2 or a hero in mono.",
+      "Don't force the new theme on users: ship it as an opt-in [data-theme] toggle with a way back."
+    ]
+  }
+}

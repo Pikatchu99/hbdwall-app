@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@900&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 800px;
+    height: 800px;
+    background: #EAEAEA;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .logo {
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 10px;
+    line-height: 1;
+  }
+  .logo-text {
+    display: flex;
+    flex-direction: column;
+  }
+  .logo-small {
+    font-family: 'Space Mono', monospace;
+    font-size: 22px;
+    font-weight: 400;
+    text-transform: lowercase;
+    letter-spacing: 0.06em;
+    color: #888888;
+    line-height: 1.4;
+  }
+  .logo-big {
+    font-family: 'Inter', sans-serif;
+    font-size: 72px;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    color: #111111;
+    line-height: 0.9;
+  }
+  .dot {
+    width: 18px;
+    height: 18px;
+    background: #7B61FF;
+    flex-shrink: 0;
+    margin-bottom: 6px;
+  }
+</style>
+</head>
+<body>
+  <div class="logo">
+    <div class="logo-text">
+      <span class="logo-small">birthday</span>
+      <span class="logo-big">Wall</span>
+    </div>
+    <div class="dot"></div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,25 @@
+# hbdwall
+
+> hbdwall (https://hbdwall.xyz) est un **mur d'anniversaire en ligne gratuit**. On crée une page pour un anniversaire, on partage le lien (ou un QR code), et les proches y laissent un message et une photo — sans avoir à créer de compte. Le créateur garde tout sous forme de collage souvenir, et chaque année garde son propre mur, comme une capsule.
+
+## Ce que c'est
+- Un mur d'anniversaire collaboratif en ligne (une carte d'anniversaire collective et numérique).
+- Gratuit. Aucun compte n'est requis pour laisser un message.
+- Pensé pour une surprise d'anniversaire de groupe, même à distance.
+- Alternative moderne à la carte d'anniversaire papier et à la cagnotte de messages.
+
+## Comment ça marche
+1. Tu crées ton mur en 30 secondes (un pseudo, une date).
+2. Tu partages le lien ou le QR code à tes proches.
+3. Ils laissent un mot et une photo. Tu récupères un collage souvenir à imprimer ou partager.
+
+## Foire aux questions
+- Est-ce gratuit ? Oui, créer un mur et recevoir les messages est entièrement gratuit.
+- Faut-il un compte pour participer ? Non, les invités écrivent en quelques secondes sans compte.
+- Peut-on l'utiliser à distance / en groupe ? Oui, le lien se partage partout.
+- Que devient le mur après l'anniversaire ? Il reste accessible ; chaque année a son propre mur.
+
+## Liens
+- Site : https://hbdwall.xyz
+- Blog (idées, messages et surprises d'anniversaire) : https://hbdwall.xyz/fr/blog
+- Contact : support@hbdwall.xyz

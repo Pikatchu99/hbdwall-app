@@ -1,0 +1,164 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  pseudo    String   @unique
+  name      String
+  code      String   @default("")
+  isAdmin      Boolean  @default(false)
+  wantsFeature  Boolean  @default(false)
+  authProvider      String   @default("pin")
+  image             String?
+  email             String?  @unique
+  tiktokHandle      String?
+  instagramHandle   String?
+  walls             Wall[]
+  pushSubscriptions PushSubscription[]
+  accounts          Account[]
+  sessions          Session[]
+  createdAt         DateTime @default(now())
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  @@unique([identifier, token])
+}
+
+model Wall {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  title       String
+  date        DateTime
+  description String?
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages    Message[]
+  editions    Edition[]
+  recipientName     String?
+  referrerWallSlug  String?
+  isBirthday        Boolean        @default(true)
+  isActive          Boolean        @default(true)
+  featured          Boolean        @default(false)
+  instagramPostId   String?
+  instagramPost     InstagramPost? @relation(fields: [instagramPostId], references: [id], onDelete: SetNull)
+  createdAt         DateTime       @default(now())
+}
+
+model InstagramPost {
+  id        String   @id @default(cuid())
+  url       String   @unique
+  createdAt DateTime @default(now())
+  walls     Wall[]
+}
+
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+}
+
+model NotificationLog {
+  id        String   @id @default(cuid())
+  title     String
+  body      String
+  target    String
+  sent      Int
+  failed    Int
+  createdAt DateTime @default(now())
+}
+
+model Edition {
+  id        String         @id @default(cuid())
+  wallId    String
+  wall      Wall           @relation(fields: [wallId], references: [id], onDelete: Cascade)
+  year      Int
+  openedAt  DateTime       @default(now())
+  closedAt  DateTime?
+  messages  Message[]
+  wishlist  WishlistItem[]
+  createdAt DateTime       @default(now())
+
+  @@unique([wallId, year])
+}
+
+model WishlistItem {
+  id        String    @id @default(cuid())
+  editionId String
+  edition   Edition   @relation(fields: [editionId], references: [id], onDelete: Cascade)
+  title     String
+  url       String?
+  price     String?
+  position  Int       @default(0)
+  // Réservation « je m'en occupe » — prévu pour la v2, jamais exposé en v1.
+  claimedBy String?
+  claimedAt DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([editionId, position])
+}
+
+model Message {
+  id         String   @id @default(cuid())
+  wallId     String
+  wall       Wall     @relation(fields: [wallId], references: [id], onDelete: Cascade)
+  editionId  String?
+  edition    Edition? @relation(fields: [editionId], references: [id], onDelete: SetNull)
+  authorName String?
+  content    String
+  photoUrl      String?
+  fromPlatform  Boolean  @default(false)
+  isPinned      Boolean  @default(false)
+  pinnedAt      DateTime?
+  isHidden      Boolean  @default(false)
+  hiddenAt      DateTime?
+  hiddenById    String?
+  hiddenByRole  String?
+  createdAt     DateTime @default(now())
+
+  @@index([wallId, isHidden, createdAt])
+  @@index([wallId, isPinned, pinnedAt])
+  @@index([editionId, isHidden, createdAt])
+}
