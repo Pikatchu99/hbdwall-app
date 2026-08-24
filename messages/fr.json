@@ -97,6 +97,8 @@
     "pastEditions": "Éditions passées →"
   },
   "wall": {
+    "birthdayTitle": "Anniversaire de {name}",
+    "metaDescription": "Laisse un mot à {name} pour son anniversaire. Ça prend 30 secondes.",
     "leaveMessage": "Laisse un message",
     "leaveMessageSubtitle": "Laisse un mot, une photo. Ça prend 30 secondes.",
     "anonymous": "Anonyme",

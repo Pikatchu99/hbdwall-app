@@ -18,17 +18,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     include: { user: { select: { pseudo: true, name: true } } },
   })
   if (!wall) return {}
-  const pseudo = wall.user.pseudo
-  const name = wall.user.name
-  const isFr = locale === 'fr'
-  const title = `@${pseudo}'s birthday`
-  const description = isFr
-    ? `Laisse un mot à ${name} pour son anniversaire. Ça prend 30 secondes.`
-    : `Leave a note for ${name}'s birthday. Takes 30 seconds.`
+  const t = await getTranslations({ locale, namespace: 'wall' })
+  const name = wall.recipientName ?? wall.user.name
+  const title = t('birthdayTitle', { name })
+  const description = t('metaDescription', { name })
   return {
     title,
     description,
-    openGraph: { title: `@${pseudo}'s birthday - ${wall.title}`, description, type: 'website' },
+    openGraph: { title: `${title} - ${wall.title}`, description, type: 'website' },
     twitter: { card: 'summary_large_image', title, description },
   }
 }
@@ -52,6 +49,7 @@ export default async function WallPage({
     },
   })
   if (!wall) notFound()
+  const recipientName = wall.recipientName ?? wall.user.name
 
   // Quelle édition consulte-t-on ? ?year= ou, par défaut, l'année en cours.
   const viewingYear = yearParam ? parseInt(yearParam, 10) : currentYear()
@@ -157,7 +155,7 @@ export default async function WallPage({
         <BirthdayCountdown date={wall.date.toISOString()} name={wall.user.name} />
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--s-3)', marginBottom: 'var(--s-3)', flexWrap: 'wrap' }}>
           <Avatar name={wall.user.pseudo} src={wall.user.image} size={64} />
-          <h1 className="t-h1">@{wall.user.pseudo}'s birthday</h1>
+          <h1 className="t-h1">{t('birthdayTitle', { name: recipientName })}</h1>
         </div>
 
         <p className="t-body t-muted">

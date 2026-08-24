@@ -97,6 +97,8 @@
     "pastEditions": "Past editions →"
   },
   "wall": {
+    "birthdayTitle": "{name}'s birthday",
+    "metaDescription": "Leave a note for {name}'s birthday. Takes 30 seconds.",
     "leaveMessage": "Leave a message",
     "leaveMessageSubtitle": "Leave a note, a photo. It only takes 30 seconds.",
     "anonymous": "Anonymous",
