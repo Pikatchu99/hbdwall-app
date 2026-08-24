@@ -18,6 +18,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
 
   const pseudo = wall?.user.pseudo ?? 'someone'
   const name = wall?.recipientName || wall?.user.name || pseudo
+  const isForSomeoneElse = !!wall?.recipientName && wall.recipientName.trim().toLowerCase() !== wall.user.name.trim().toLowerCase()
   const dateStr = wall?.date
     ? new Date(wall.date).toLocaleDateString(isFr ? 'fr-FR' : 'en-US', { day: 'numeric', month: 'long' })
     : ''
@@ -66,7 +67,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
               </div>
               <span style={{ fontFamily: 'Baloo 2', fontWeight: 800, fontSize: 28, color: INK }}>hbdwall</span>
             </div>
-            <span style={{ color: MUTED, fontSize: 20, letterSpacing: '0.06em' }}>{`@${pseudo}`}</span>
+            {isForSomeoneElse ? null : <span style={{ color: MUTED, fontSize: 20, letterSpacing: '0.06em' }}>{`@${pseudo}`}</span>}
           </div>
 
           {/* Middle : avatar | nom | QR */}

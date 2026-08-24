@@ -24,6 +24,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ slug: st
 
   const pseudo = wall?.user.pseudo ?? 'someone'
   const name = wall?.recipientName || wall?.user.name || pseudo
+  const isForSomeoneElse = !!wall?.recipientName && wall.recipientName.trim().toLowerCase() !== wall.user.name.trim().toLowerCase()
   const dateStr = wall?.date
     ? new Date(wall.date).toLocaleDateString(isFr ? 'fr-FR' : 'en-US', { day: 'numeric', month: 'long' })
     : ''
@@ -84,7 +85,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ slug: st
               </div>
               <span style={{ fontFamily: th.display, fontWeight: th.displayWeight, fontSize: 32, color: th.ink }}>hbdwall</span>
             </div>
-            <span style={{ color: th.muted, fontSize: 24, letterSpacing: '0.06em' }}>{`@${pseudo}`}</span>
+            {isForSomeoneElse ? null : <span style={{ color: th.muted, fontSize: 24, letterSpacing: '0.06em' }}>{`@${pseudo}`}</span>}
           </div>
 
           {/* Headline */}
