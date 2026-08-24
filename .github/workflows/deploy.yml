@@ -1,0 +1,113 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT }}
+          command_timeout: 30m
+          script: |
+            set -e
+
+            echo "📂 Navigating to project directory..."
+            cd /var/www/hbdwall
+
+            echo "🔧 Fixing Git ownership issue..."
+            git config --global --add safe.directory /var/www/hbdwall
+
+            echo "🔑 Configuring Git authentication..."
+            git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+
+            echo "📥 Pulling latest changes from GitHub..."
+            git pull origin main
+
+            echo "⚙️ Creating .env file from secrets..."
+            cat > .env << 'ENVEOF'
+            POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+            SESSION_SECRET=${{ secrets.SESSION_SECRET }}
+
+            R2_ACCOUNT_ID=${{ secrets.R2_ACCOUNT_ID }}
+            R2_ACCESS_KEY_ID=${{ secrets.R2_ACCESS_KEY_ID }}
+            R2_SECRET_ACCESS_KEY=${{ secrets.R2_SECRET_ACCESS_KEY }}
+            R2_BUCKET_NAME=${{ secrets.R2_BUCKET_NAME }}
+            R2_PUBLIC_URL=${{ secrets.R2_PUBLIC_URL }}
+
+            GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
+            GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
+
+            AUTH_SECRET=${{ secrets.AUTH_SECRET }}
+            NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}
+
+            NEXT_PUBLIC_VAPID_PUBLIC_KEY=${{ secrets.NEXT_PUBLIC_VAPID_PUBLIC_KEY }}
+            VAPID_PRIVATE_KEY=${{ secrets.VAPID_PRIVATE_KEY }}
+            VAPID_MAILTO=${{ secrets.VAPID_MAILTO }}
+
+            CRON_SECRET=${{ secrets.CRON_SECRET }}
+            ENVEOF
+
+            echo "🔍 Verifying .env file was created..."
+            if [ ! -f .env ]; then
+              echo "❌ ERROR: Failed to create .env file!"
+              exit 1
+            fi
+            echo "✅ .env file created successfully"
+
+            echo "🗄️ Backing up database before migration..."
+            mkdir -p backups
+            BACKUP_FILE=""
+            if docker compose exec -T postgres pg_isready -U hbdwall > /dev/null 2>&1; then
+              BACKUP_FILE="backups/pre-deploy-$(date +%Y%m%d-%H%M%S).sql.gz"
+              docker compose exec -T postgres pg_dump -U hbdwall hbdwall | gzip > "$BACKUP_FILE"
+              echo "✅ Backup saved to $BACKUP_FILE"
+              ls -t backups/pre-deploy-*.sql.gz | tail -n +11 | xargs -r rm --
+            else
+              echo "⚠️ Postgres pas encore démarré, backup pre-deploy ignoré (premier déploiement ?)"
+            fi
+
+            echo "🏗️ Building Docker images (this may take a while)..."
+            docker compose build --no-cache
+
+            echo "🚀 Replacing containers..."
+            docker compose up -d --remove-orphans
+
+            echo "⏳ Waiting for containers to start..."
+            sleep 10
+
+            echo "📊 Container status:"
+            docker compose ps
+
+            echo "🔎 Checking that the app started (migration may have failed silently otherwise)..."
+            APP_CID=$(docker compose ps -q app)
+            if [ -z "$APP_CID" ] || [ "$(docker inspect -f '{{.State.Running}}' "$APP_CID" 2>/dev/null)" != "true" ]; then
+              echo "❌ Le service 'app' n'a pas démarré — la migration a probablement échoué."
+              echo "📄 Logs du service migrate :"
+              docker compose logs --tail=100 migrate
+              if [ -n "$BACKUP_FILE" ] && [ -f "$BACKUP_FILE" ]; then
+                echo ""
+                echo "📦 Backup pré-déploiement disponible : $BACKUP_FILE"
+                echo "👉 Pour restaurer : gunzip -c $BACKUP_FILE | docker compose exec -T postgres psql -U hbdwall hbdwall"
+              fi
+              exit 1
+            fi
+            echo "✅ App démarrée avec succès."
+
+            echo "🧹 Cleaning up old Docker resources..."
+            docker system prune -f
+
+            echo "✅ Deployment completed successfully!"
+            echo ""
+            echo "📝 Application logs (last 50 lines):"
+            docker compose logs --tail=50 app
