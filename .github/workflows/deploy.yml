@@ -32,7 +32,8 @@ jobs:
             git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
 
             echo "📥 Pulling latest changes from GitHub..."
-            git pull origin main
+            git fetch origin main
+            git reset --hard origin/main
 
             echo "⚙️ Creating .env file from secrets..."
             cat > .env << 'ENVEOF'
