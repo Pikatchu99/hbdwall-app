@@ -23,6 +23,7 @@
     "canvas-confetti": "^1.9.4",
     "framer-motion": "^12.38.0",
     "gsap": "^3.15.0",
+    "heic-convert": "^2.1.0",
     "html-to-image": "^1.11.13",
     "html2canvas": "^1.4.1",
     "iron-session": "^8.0.4",
@@ -52,6 +53,7 @@
   "devDependencies": {
     "@types/bcryptjs": "^3.0.0",
     "@types/canvas-confetti": "^1.9.0",
+    "@types/heic-convert": "^2.1.1",
     "@types/node": "^20",
     "@types/pg": "^8.20.0",
     "@types/qrcode": "^1.5.6",
