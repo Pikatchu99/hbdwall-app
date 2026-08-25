@@ -73,6 +73,7 @@ model Wall {
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   messages    Message[]
   editions    Edition[]
+  renderJobs  RenderJob[]
   recipientName     String?
   referrerWallSlug  String?
   isBirthday        Boolean        @default(true)
@@ -119,6 +120,7 @@ model Edition {
   closedAt  DateTime?
   messages  Message[]
   wishlist  WishlistItem[]
+  renderJobs RenderJob[]
   createdAt DateTime       @default(now())
 
   @@unique([wallId, year])
@@ -161,4 +163,22 @@ model Message {
   @@index([wallId, isHidden, createdAt])
   @@index([wallId, isPinned, pinnedAt])
   @@index([editionId, isHidden, createdAt])
+}
+
+model RenderJob {
+  id            String    @id @default(cuid())
+  wallId        String
+  wall          Wall      @relation(fields: [wallId], references: [id], onDelete: Cascade)
+  editionId     String?
+  edition       Edition?  @relation(fields: [editionId], references: [id], onDelete: SetNull)
+  status        String    @default("pending") // pending | rendering | done | failed
+  videoUrl      String?
+  errorMessage  String?
+  requestedById String
+  startedAt     DateTime?
+  finishedAt    DateTime?
+  createdAt     DateTime  @default(now())
+
+  @@index([wallId, status, createdAt])
+  @@index([status, createdAt])
 }

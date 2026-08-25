@@ -44,6 +44,10 @@ next-env.d.ts
 # generated assets
 /generated/
 
+# remotion (video render bundle cache / local render output)
+.remotion/
+remotion.bundle/
+
 /app/generated/prisma
 .env
 

@@ -63,6 +63,27 @@ services:
       - internal
       - web
 
+  render-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.render
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    environment:
+      DATABASE_URL: postgresql://hbdwall:${POSTGRES_PASSWORD}@postgres:5432/hbdwall
+      DIRECT_DATABASE_URL: postgresql://hbdwall:${POSTGRES_PASSWORD}@postgres:5432/hbdwall
+      R2_ACCOUNT_ID: ${R2_ACCOUNT_ID}
+      R2_ACCESS_KEY_ID: ${R2_ACCESS_KEY_ID}
+      R2_SECRET_ACCESS_KEY: ${R2_SECRET_ACCESS_KEY}
+      R2_BUCKET_NAME: ${R2_BUCKET_NAME}
+      R2_PUBLIC_URL: ${R2_PUBLIC_URL}
+    networks:
+      - internal
+
   cron:
     image: alpine:3.19
     restart: unless-stopped

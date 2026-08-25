@@ -60,6 +60,17 @@ export async function uploadToR2(file: File): Promise<string> {
   return `${process.env.R2_PUBLIC_URL}/${key}`
 }
 
+export async function uploadBufferToR2(buffer: Buffer, opts: { key: string; contentType: string }): Promise<string> {
+  await client.send(new PutObjectCommand({
+    Bucket: process.env.R2_BUCKET_NAME!,
+    Key: opts.key,
+    Body: buffer,
+    ContentType: opts.contentType,
+  }))
+
+  return `${process.env.R2_PUBLIC_URL}/${opts.key}`
+}
+
 export async function deleteFromR2(url: string): Promise<void> {
   const base = process.env.R2_PUBLIC_URL!
   if (!url.startsWith(base)) return
