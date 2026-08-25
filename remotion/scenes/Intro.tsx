@@ -17,7 +17,7 @@ export function Intro({ recipientName, wallDateLabel }: { recipientName: string;
           Mur d&rsquo;anniversaire
         </div>
         <div style={{ fontFamily: round, fontWeight: 800, fontSize: 110, letterSpacing: '-0.01em', lineHeight: 0.95, color: colors.violet }}>
-          <HighlightWord kind="circle" variant={0}>{recipientName.toUpperCase()}</HighlightWord>
+          <HighlightWord kind="under" variant={0} underBottom="-18%" underHeight="15%">{recipientName.toUpperCase()}</HighlightWord>
         </div>
         <div style={{ fontFamily: mono, fontSize: 26, letterSpacing: '0.05em', color: colors.muted }}>{wallDateLabel}</div>
       </AbsoluteFill>

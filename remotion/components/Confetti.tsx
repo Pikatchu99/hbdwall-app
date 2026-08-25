@@ -2,27 +2,27 @@ import { useCurrentFrame, useVideoConfig, random, interpolate } from 'remotion'
 
 const COLORS = ['#8E4CFF', '#F04FA4', '#FFD23F', '#8FD14F', '#4C8EFF', '#FF8A3D']
 const COUNT = 40
+const GRAVITY = 0.85 // px par frame²
 
 // Particules déterministes (via random(seed) de Remotion, pas Math.random —
 // nécessaire pour que le rendu frame par frame reste reproductible).
+// Physique en pixels/frame directement (pas de double conversion via les
+// secondes) pour un vrai burst rapide façon confetti, pas un mouvement lent.
 export function Confetti() {
   const frame = useCurrentFrame()
-  const { fps, width, height } = useVideoConfig()
-  const t = frame / fps
+  const { width, height } = useVideoConfig()
 
   const particles = Array.from({ length: COUNT }, (_, i) => {
     const seed = `confetti-${i}`
-    const angle = random(seed + '-angle') * Math.PI - Math.PI / 2 - Math.PI / 4
-    const speed = 3.2 + random(seed + '-speed') * 3
-    const vx = Math.cos(angle) * speed
-    const vy = Math.sin(angle) * speed - 2
-    const gravity = 5.5
-    const x = width / 2 + vx * t * fps * 0.5
-    const y = height * 0.3 + vy * t * fps * 0.5 + 0.5 * gravity * (t * fps * 0.5) ** 2 * 0.02
-    const rot = random(seed + '-rot') * 360 + t * (random(seed + '-spin') * 200 - 100)
-    const size = 6 + random(seed + '-size') * 6
+    const vx = (random(seed + '-vx') - 0.5) * 32 // -16..16 px/frame
+    const vy0 = -(8 + random(seed + '-vy') * 10) // -8..-18 px/frame (vers le haut)
+
+    const x = width / 2 + vx * frame
+    const y = height * 0.32 + vy0 * frame + 0.5 * GRAVITY * frame * frame
+    const rot = random(seed + '-rot') * 360 + frame * (random(seed + '-spin') * 14 - 7)
+    const size = 7 + random(seed + '-size') * 7
     const color = COLORS[i % COLORS.length]
-    const opacity = interpolate(t, [0, 1.4, 1.8], [1, 1, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
+    const opacity = interpolate(frame, [0, 8, 42, 55], [0, 1, 1, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
     return { x, y, rot, size, color, opacity }
   })
 

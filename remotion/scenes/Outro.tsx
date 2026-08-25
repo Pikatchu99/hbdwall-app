@@ -24,14 +24,14 @@ export function Outro({ recipientName, socials }: Props) {
             fontWeight: 800,
             fontSize: 48,
             letterSpacing: '-0.01em',
-            lineHeight: 1.5,
+            lineHeight: 1.2,
             color: colors.ink,
             background: colors.yellow,
-            padding: '0.06em 0.3em',
+            padding: '0.2em 0.3em',
             borderRadius: 16,
           }}
         >
-          Joyeux anniversaire <HighlightWord kind="circle" variant={0}>{recipientName}</HighlightWord>
+          Joyeux anniversaire <HighlightWord kind="under" variant={0}>{recipientName}</HighlightWord>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18 }}>
