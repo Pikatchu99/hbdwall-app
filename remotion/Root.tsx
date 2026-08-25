@@ -9,6 +9,7 @@ const defaultProps: WallReplayInputProps = {
   wallDateLabel: '14 mars',
   stats: { messageCount: 0, authorCount: 0, photoCount: 0 },
   messages: [],
+  wallTiles: [],
   socials: { instagram: 'instagram.com/hbdwall', tiktok: 'tiktok.com/@hbdwall' },
 }
 

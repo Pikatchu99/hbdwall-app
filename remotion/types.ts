@@ -5,6 +5,12 @@ export interface WallReplayMessage {
   photoUrl: string | null
 }
 
+export interface WallReplayTile {
+  id: string
+  authorName: string | null
+  photoUrl: string | null
+}
+
 export type WallReplayInputProps = {
   wallSlug: string
   recipientName: string
@@ -15,6 +21,7 @@ export type WallReplayInputProps = {
     photoCount: number
   }
   messages: WallReplayMessage[]
+  wallTiles: WallReplayTile[]
   socials: {
     instagram: string
     tiktok: string

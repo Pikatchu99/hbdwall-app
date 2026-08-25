@@ -48,7 +48,8 @@ async function buildInputProps(jobId: string): Promise<{ inputProps: WallReplayI
     }),
     prisma.message.findMany({
       where: { wallId: wall.id, isHidden: false },
-      select: { authorName: true, photoUrl: true },
+      orderBy: { createdAt: 'desc' },
+      select: { id: true, authorName: true, photoUrl: true },
     }),
   ])
 
@@ -61,6 +62,7 @@ async function buildInputProps(jobId: string): Promise<{ inputProps: WallReplayI
     wallDateLabel: new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'long' }).format(wall.date),
     stats: { messageCount: allMessages.length, authorCount, photoCount },
     messages,
+    wallTiles: allMessages.slice(0, 16),
     socials: HBDWALL_SOCIALS,
   }
 
@@ -71,7 +73,12 @@ async function renderJob(jobId: string) {
   const { inputProps, wallSlug } = await buildInputProps(jobId)
 
   const serveUrl = await bundle({ entryPoint: resolve(__dirname, '../remotion/index.ts') })
-  const composition = await selectComposition({ serveUrl, id: 'WallReplay', inputProps })
+  const composition = await selectComposition({
+    serveUrl,
+    id: 'WallReplay',
+    inputProps,
+    timeoutInMilliseconds: 120000,
+  })
 
   const outputPath = join(tmpdir(), `wall-replay-${jobId}.mp4`)
   await renderMedia({
@@ -80,6 +87,7 @@ async function renderJob(jobId: string) {
     codec: 'h264',
     outputLocation: outputPath,
     inputProps,
+    timeoutInMilliseconds: 120000,
   })
 
   const buffer = await readFile(outputPath)
