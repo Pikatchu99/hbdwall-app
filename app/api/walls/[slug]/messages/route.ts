@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
-import { uploadToR2 } from '@/lib/r2'
+import { uploadToR2, InvalidFileError } from '@/lib/r2'
 import { getSession } from '@/lib/session'
 import webpush from '@/lib/webpush'
 import { getCurrentEdition } from '@/lib/edition'
@@ -47,7 +47,14 @@ export async function POST(
 
   let photoUrl: string | null = null
   if (photo && photo.size > 0) {
-    photoUrl = await uploadToR2(photo)
+    try {
+      photoUrl = await uploadToR2(photo)
+    } catch (error) {
+      if (error instanceof InvalidFileError) {
+        return NextResponse.json({ error: error.message }, { status: 400 })
+      }
+      throw error
+    }
   }
 
   const session = await getSession()
