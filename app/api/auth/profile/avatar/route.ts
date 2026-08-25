@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 import { getSession } from '@/lib/session'
 import { auth } from '@/auth'
-import { uploadToR2, deleteFromR2 } from '@/lib/r2'
+import { uploadToR2, deleteFromR2, InvalidFileError } from '@/lib/r2'
 
 async function resolveUserId(): Promise<string | undefined> {
   const session = await getSession()
@@ -26,7 +26,15 @@ export async function POST(request: NextRequest) {
 
   const current = await prisma.user.findUnique({ where: { id: userId }, select: { image: true } })
 
-  const url = await uploadToR2(file)
+  let url: string
+  try {
+    url = await uploadToR2(file)
+  } catch (error) {
+    if (error instanceof InvalidFileError) {
+      return NextResponse.json({ error: error.message }, { status: 400 })
+    }
+    throw error
+  }
   await prisma.user.update({ where: { id: userId }, data: { image: url } })
 
   if (current?.image) {

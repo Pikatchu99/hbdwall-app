@@ -8,8 +8,12 @@ export interface SessionData {
   pendingLink?: string
 }
 
+if (!process.env.SESSION_SECRET) {
+  throw new Error('SESSION_SECRET environment variable is required')
+}
+
 export const sessionOptions = {
-  password: process.env.SESSION_SECRET || 'hbdwall_secret_key_min_32_chars_long!!',
+  password: process.env.SESSION_SECRET,
   cookieName: 'bw_session',
   cookieOptions: {
     secure: process.env.NODE_ENV === 'production',
