@@ -339,7 +339,7 @@ export default function CollageCanvas({ messages, wallTitle, ownerName, recipien
           <button
             onClick={() => setInfoOpen(false)}
             className="btn btn--ghost"
-            style={{ fontSize: '10px', padding: 'var(--s-1) var(--s-2)' }}
+            style={{ fontSize: '10px', padding: 'var(--s-2) var(--s-4)', minHeight: '40px' }}
           >
             {t('infoClose')}
           </button>
@@ -371,7 +371,7 @@ export default function CollageCanvas({ messages, wallTitle, ownerName, recipien
       </div>
       <div style={{ display: customizing ? 'flex' : 'none', flexDirection: 'column', gap: 'var(--s-4)', marginBottom: 'var(--s-6)', padding: 'var(--s-6)', border: 'var(--border-w) solid var(--border)', borderTop: 'none', marginTop: 'calc(-1 * var(--s-6))' }}>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 'var(--s-3)', flexWrap: 'wrap' }}>
           <ConfigGroup label={t('titleLabel')}>
             <input
               className="input"
@@ -383,7 +383,7 @@ export default function CollageCanvas({ messages, wallTitle, ownerName, recipien
           <button
             onClick={() => setInfoOpen(true)}
             className="btn btn--ghost"
-            style={{ fontSize: '10px', padding: 'var(--s-1) var(--s-3)', flexShrink: 0, alignSelf: 'flex-end' }}
+            style={{ fontSize: '10px', padding: 'var(--s-2) var(--s-4)', minHeight: '40px', flexShrink: 0 }}
           >
             {t('infoButton')} Guide
           </button>
@@ -442,10 +442,10 @@ export default function CollageCanvas({ messages, wallTitle, ownerName, recipien
         </button>
         {selectingMessages && (
           <>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 'var(--s-2)', padding: 'var(--s-2) var(--s-4)', borderTop: 'var(--border-w) solid var(--border)' }}>
-              <button className="btn btn--ghost" style={{ fontSize: '10px', padding: 'var(--s-1) var(--s-2)' }} onClick={selectAll}>{t('selectAll')}</button>
-              <button className="btn btn--ghost" style={{ fontSize: '10px', padding: 'var(--s-1) var(--s-2)' }} onClick={selectNone}>{t('selectNone')}</button>
-              <button className="btn btn--ghost" style={{ fontSize: '10px', padding: 'var(--s-1) var(--s-2)' }} onClick={shuffle}>{t('shuffle')}</button>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 'var(--s-2)', padding: 'var(--s-2) var(--s-4)', borderTop: 'var(--border-w) solid var(--border)', flexWrap: 'wrap' }}>
+              <button className="btn btn--ghost" style={{ fontSize: '10px', padding: 'var(--s-2) var(--s-4)', minHeight: '40px' }} onClick={selectAll}>{t('selectAll')}</button>
+              <button className="btn btn--ghost" style={{ fontSize: '10px', padding: 'var(--s-2) var(--s-4)', minHeight: '40px' }} onClick={selectNone}>{t('selectNone')}</button>
+              <button className="btn btn--ghost" style={{ fontSize: '10px', padding: 'var(--s-2) var(--s-4)', minHeight: '40px' }} onClick={shuffle}>{t('shuffle')}</button>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
           {pool.map((msg, i) => {
