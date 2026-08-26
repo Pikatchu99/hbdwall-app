@@ -34,7 +34,7 @@ export default async function CollagePage({
   }))
 
   return (
-    <main style={{ minHeight: '100vh' }}>
+    <main data-theme="joyful" style={{ minHeight: '100vh' }}>
       <Nav />
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: 'var(--s-8)' }}>
         <div style={{ marginBottom: 'var(--s-8)' }}>

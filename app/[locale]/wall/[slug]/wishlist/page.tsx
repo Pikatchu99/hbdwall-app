@@ -31,7 +31,7 @@ export default async function WishlistPage({ params }: { params: Promise<{ slug:
   const t = await getTranslations('wishlist')
 
   return (
-    <main style={{ minHeight: '100vh' }}>
+    <main data-theme="joyful" style={{ minHeight: '100vh' }}>
       <Nav />
       <div style={{ maxWidth: '900px', margin: '0 auto', padding: 'var(--s-12) var(--s-6)' }}>
 

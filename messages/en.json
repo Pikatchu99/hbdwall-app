@@ -148,6 +148,7 @@
   "wallAdmin": {
     "title": "Manage messages",
     "breadcrumbMessages": "Messages",
+    "exportsLabel": "EXPORTS",
     "collageLink": "→ Collage",
     "wordcloudLink": "→ Word Cloud",
     "renderLink": "→ Wall Replay",

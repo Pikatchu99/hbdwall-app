@@ -4,6 +4,7 @@ import { getTranslations } from 'next-intl/server'
 import { prisma } from '@/lib/db'
 import { getSession } from '@/lib/session'
 import { currentYear } from '@/lib/edition'
+import Nav from '@/components/Nav'
 
 // Teintes festives tournantes par édition (joyeux uniquement ; sans effet en classique).
 const YEAR_TINTS = ['tint-violet', 'tint-magenta', 'tint-yellow', 'tint-lime', 'tint-blue']
@@ -14,7 +15,7 @@ export default async function YearsPage({ params }: { params: Promise<{ slug: st
 
   const wall = await prisma.wall.findUnique({
     where: { slug },
-    include: { user: { select: { name: true, pseudo: true } } },
+    include: { user: { select: { name: true } } },
   })
   if (!wall) notFound()
 
@@ -57,19 +58,13 @@ export default async function YearsPage({ params }: { params: Promise<{ slug: st
   const thisYear = currentYear()
 
   return (
-    <main style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <nav style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: 'var(--s-4) var(--s-6)',
-        borderBottom: 'var(--border-w) solid var(--border)',
-      }}>
+    <main data-theme="joyful" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <Nav />
+      <div style={{ padding: 'var(--s-4) var(--s-6) 0' }}>
         <Link href={`/wall/${slug}`} className="t-label link" style={{ textDecoration: 'none' }}>
           {t('back')}
         </Link>
-        <span className="t-label t-muted">@{wall.user.pseudo}</span>
-      </nav>
+      </div>
 
       <header style={{
         maxWidth: '900px',

@@ -58,7 +58,7 @@ export default function WishlistManager({
   return (
     <div className="wishlist-manager-grid" style={{
       display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(min(300px, 100%), 1fr))',
       gap: 'var(--s-12)',
       alignItems: 'start',
     }}>
@@ -109,14 +109,14 @@ export default function WishlistManager({
               autoFocus
               required
             />
-            <div style={{ display: 'flex', gap: 'var(--s-3)' }}>
+            <div style={{ display: 'flex', gap: 'var(--s-3)', flexWrap: 'wrap' }}>
               <input
                 className="input"
                 type="url"
                 value={url}
                 onChange={e => setUrl(e.target.value)}
                 placeholder={t('fieldUrlPlaceholder')}
-                style={{ flex: 2 }}
+                style={{ flex: '2 1 180px' }}
               />
               <input
                 className="input"
@@ -124,7 +124,7 @@ export default function WishlistManager({
                 value={price}
                 onChange={e => setPrice(e.target.value)}
                 placeholder={t('fieldPricePlaceholder')}
-                style={{ flex: 1 }}
+                style={{ flex: '1 1 100px' }}
               />
             </div>
             <div style={{ display: 'flex', gap: 'var(--s-3)', alignItems: 'center' }}>
