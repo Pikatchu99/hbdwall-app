@@ -1,54 +1,54 @@
-import { AbsoluteFill, Img, useCurrentFrame, interpolate } from 'remotion'
-import { colors, tints } from '../theme'
-import { round } from '../fonts'
-import { HighlightWord } from '../components/HighlightWord'
+import { AbsoluteFill, useCurrentFrame, interpolate } from 'remotion'
+import { colors } from '../theme'
+import { round, mono } from '../fonts'
 import { Watermark } from '../components/Watermark'
 import { useEnterTransition } from '../components/sceneTransition'
-import type { WallReplayTile } from '../types'
+import type { WordCount } from '../types'
 
-export function WallBuild({ tiles }: { tiles: WallReplayTile[] }) {
+const WORD_COLORS = [colors.violet, colors.magenta, colors.blue, colors.orange]
+const ROTATIONS = [-4, 3, -2, 5, -3, 2, -5, 4]
+const MIN_SIZE = 24
+const MAX_SIZE = 84
+
+export function WallBuild({ wordCloud }: { wordCloud: WordCount[] }) {
   const enter = useEnterTransition()
   const frame = useCurrentFrame()
 
+  const maxCount = wordCloud[0]?.count ?? 1
+  const minCount = wordCloud[wordCloud.length - 1]?.count ?? 1
+  const range = Math.max(maxCount - minCount, 1)
+
   return (
     <AbsoluteFill style={{ background: colors.paper, ...enter }}>
-      <AbsoluteFill style={{ alignItems: 'center', justifyContent: 'center', gap: 32 }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, width: '78%' }}>
-          {tiles.map((tile, i) => {
-            const delay = 4 + i * 3
-            const scale = interpolate(frame, [delay, delay + 10], [0.5, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
-            const opacity = interpolate(frame, [delay, delay + 10], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
-            const tint = tints[i % tints.length]
-            const initial = tile.authorName?.trim()?.[0]?.toUpperCase() ?? '♥'
+      <AbsoluteFill style={{ alignItems: 'center', justifyContent: 'center', gap: 28, padding: '0 70px' }}>
+        <div style={{ fontFamily: mono, fontSize: 20, letterSpacing: '0.14em', textTransform: 'uppercase', color: colors.muted }}>
+          Ton mur, en mots
+        </div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: '4px 18px', maxHeight: 900 }}>
+          {wordCloud.map((w, i) => {
+            const scale = Math.sqrt((w.count - minCount) / range)
+            const size = MIN_SIZE + (MAX_SIZE - MIN_SIZE) * scale
+            const delay = 6 + i * 3
+            const opacity = interpolate(frame, [delay, delay + 12], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
+            const pop = interpolate(frame, [delay, delay + 12], [0.6, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
             return (
-              <div
-                key={tile.id}
+              <span
+                key={w.word}
                 style={{
-                  position: 'relative',
-                  aspectRatio: '1',
-                  background: tile.photoUrl ? undefined : tint,
-                  border: `2px solid ${colors.ink}`,
-                  borderRadius: 14,
-                  boxShadow: `3px 3px 0 ${colors.ink}`,
+                  fontFamily: round,
+                  fontWeight: 800,
+                  fontSize: size,
+                  lineHeight: 1,
+                  color: WORD_COLORS[i % WORD_COLORS.length],
                   opacity,
-                  transform: `scale(${scale})`,
-                  overflow: 'hidden',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  transform: `scale(${pop}) rotate(${ROTATIONS[i % ROTATIONS.length]}deg)`,
+                  display: 'inline-block',
                 }}
               >
-                {tile.photoUrl ? (
-                  <Img src={tile.photoUrl} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                ) : (
-                  <span style={{ fontFamily: round, fontWeight: 800, fontSize: 40, color: colors.ink, opacity: 0.55 }}>{initial}</span>
-                )}
-              </div>
+                {w.word}
+              </span>
             )
           })}
-        </div>
-        <div style={{ fontFamily: round, fontWeight: 800, fontSize: 30, letterSpacing: '-0.01em', color: colors.violet }}>
-          <HighlightWord kind="under" variant={1}>TON MUR</HighlightWord>, AU COMPLET
         </div>
       </AbsoluteFill>
       <Watermark />

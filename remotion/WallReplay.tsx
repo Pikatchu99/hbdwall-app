@@ -17,7 +17,7 @@ export function getDurationInFrames(messageCount: number) {
   return INTRO_FRAMES + STATS_FRAMES + messageCount * MESSAGE_FRAMES + BUILD_FRAMES + OUTRO_FRAMES
 }
 
-export function WallReplay({ recipientName, wallDateLabel, stats, messages, wallTiles, socials }: WallReplayInputProps) {
+export function WallReplay({ recipientName, wallDateLabel, stats, messages, wordCloud, socials }: WallReplayInputProps) {
   const { durationInFrames } = useVideoConfig()
   let from = 0
 
@@ -48,7 +48,7 @@ export function WallReplay({ recipientName, wallDateLabel, stats, messages, wall
         </Sequence>
       ))}
       <Sequence from={buildAt} durationInFrames={BUILD_FRAMES}>
-        <WallBuild tiles={wallTiles} />
+        <WallBuild wordCloud={wordCloud} />
       </Sequence>
       <Sequence from={outroAt} durationInFrames={OUTRO_FRAMES}>
         <Outro recipientName={recipientName} socials={socials} />

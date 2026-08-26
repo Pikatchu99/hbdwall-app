@@ -5,10 +5,9 @@ export interface WallReplayMessage {
   photoUrl: string | null
 }
 
-export interface WallReplayTile {
-  id: string
-  authorName: string | null
-  photoUrl: string | null
+export interface WordCount {
+  word: string
+  count: number
 }
 
 export type WallReplayInputProps = {
@@ -21,7 +20,7 @@ export type WallReplayInputProps = {
     photoCount: number
   }
   messages: WallReplayMessage[]
-  wallTiles: WallReplayTile[]
+  wordCloud: WordCount[]
   socials: {
     instagram: string
     tiktok: string
