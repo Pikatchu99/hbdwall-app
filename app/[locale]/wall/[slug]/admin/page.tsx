@@ -5,6 +5,7 @@ import { getSession } from '@/lib/session'
 import { prisma } from '@/lib/db'
 import Nav from '@/components/Nav'
 import AdminClient from '@/components/AdminClient'
+import RenderTrigger from '@/components/RenderTrigger'
 
 export default async function AdminPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
@@ -29,6 +30,12 @@ export default async function AdminPage({ params }: { params: Promise<{ slug: st
 
   const me = await prisma.user.findUnique({ where: { id: session.userId }, select: { isAdmin: true } })
   if (wall.userId !== session.userId && !me?.isAdmin) redirect('/dashboard')
+
+  const lastRenderJob = await prisma.renderJob.findFirst({
+    where: { wallId: wall.id },
+    orderBy: { createdAt: 'desc' },
+    select: { id: true, status: true, videoUrl: true, errorMessage: true, finishedAt: true },
+  })
 
   const messages = wall.messages.map(m => ({
     ...m,
@@ -58,7 +65,14 @@ export default async function AdminPage({ params }: { params: Promise<{ slug: st
             <h1 className="t-h2" style={{ marginBottom: 'var(--s-1)' }}>{t('title')}</h1>
             <p className="t-small t-muted">{guestMessageCount} message{guestMessageCount > 1 ? 's' : ''} · {wall.title} · du plus récent au plus ancien</p>
           </div>
-          <Link href={`/wall/${slug}/collage`} className="btn btn--solid">{t('collageLink')}</Link>
+          <div style={{ display: 'flex', gap: 'var(--s-3)', alignItems: 'flex-start' }}>
+            <Link href={`/wall/${slug}/collage`} className="btn btn--solid">{t('collageLink')}</Link>
+            <Link href={`/wall/${slug}/wordcloud`} className="btn btn--solid">{t('wordcloudLink')}</Link>
+            <RenderTrigger
+              wallSlug={slug}
+              initialJob={lastRenderJob && { ...lastRenderJob, finishedAt: lastRenderJob.finishedAt?.toISOString() ?? null }}
+            />
+          </div>
         </div>
 
         <AdminClient wallSlug={slug} initialMessages={messages} canManagePlatform={me?.isAdmin ?? false} />

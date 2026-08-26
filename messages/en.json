@@ -149,6 +149,15 @@
     "title": "Manage messages",
     "breadcrumbMessages": "Messages",
     "collageLink": "→ Collage",
+    "wordcloudLink": "→ Word Cloud",
+    "renderLink": "→ Wall Replay",
+    "renderPending": "Generating…",
+    "renderFailed": "Generation failed.",
+    "renderRetry": "Redo",
+    "renderDone": "✓ Video ready",
+    "renderPreview": "Preview",
+    "renderHide": "Hide",
+    "renderDownload": "Download video",
     "noMessages": "No messages yet.",
     "shareEmptyHint": "Share your wall link to invite friends and family to leave a note.",
     "delete": "Delete",
@@ -240,6 +249,14 @@
     "shareCaptionOwn": "Look at the collage my friends made for me on hbdwall.xyz",
     "shareCopyCaption": "Copy text →",
     "shareCaptionCopied": "✓ Copied"
+  },
+  "wordcloud": {
+    "back": "← ADMIN",
+    "title": "Word Cloud",
+    "eyebrow": "{name}'s wall, in words",
+    "download": "↓ Download image",
+    "exporting": "Exporting...",
+    "empty": "Not enough messages yet to generate a word cloud."
   },
   "shareBlock": {
     "label": "SHARE LINK",

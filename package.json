@@ -18,6 +18,10 @@
     "@keystatic/next": "^5.0.4",
     "@prisma/adapter-pg": "^7.7.0",
     "@prisma/client": "^7.7.0",
+    "@remotion/bundler": "^4.0.516",
+    "@remotion/cli": "^4.0.516",
+    "@remotion/google-fonts": "^4.0.516",
+    "@remotion/renderer": "^4.0.516",
     "bcryptjs": "^3.0.3",
     "boring-avatars": "^2.0.4",
     "canvas-confetti": "^1.9.4",
@@ -37,6 +41,8 @@
     "qrcode": "^1.5.4",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "remotion": "^4.0.516",
+    "stopword": "^3.1.5",
     "three": "^0.185.0",
     "web-push": "^3.6.7"
   },
@@ -51,6 +57,7 @@
     ]
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
     "@types/bcryptjs": "^3.0.0",
     "@types/canvas-confetti": "^1.9.0",
     "@types/heic-convert": "^2.1.1",
@@ -59,6 +66,7 @@
     "@types/qrcode": "^1.5.6",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/stopword": "^2.0.3",
     "@types/three": "^0.185.0",
     "@types/web-push": "^3.6.4",
     "dotenv": "^17.4.2",
