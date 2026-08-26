@@ -11,7 +11,7 @@ import { renderMedia, selectComposition } from '@remotion/renderer'
 import { PrismaClient } from '../app/generated/prisma/client'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { uploadBufferToR2 } from '../lib/r2'
-import { buildWordCloud } from './wordCloud'
+import { buildWordCloud } from '../lib/wordCloud'
 import type { WallReplayInputProps } from '../remotion/types'
 
 const adapter = new PrismaPg({ connectionString: process.env.DIRECT_DATABASE_URL! })

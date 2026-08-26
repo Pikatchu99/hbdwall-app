@@ -149,6 +149,7 @@
     "title": "Gestion des messages",
     "breadcrumbMessages": "Messages",
     "collageLink": "→ Collage",
+    "wordcloudLink": "→ Nuage de mots",
     "renderLink": "→ Wall Replay",
     "renderPending": "Génération en cours…",
     "renderFailed": "La génération a échoué.",
@@ -245,6 +246,14 @@
     "shareCaptionOwn": "Regardez le collage que mes amis m'ont créé pour moi sur hbdwall.xyz",
     "shareCopyCaption": "Copier le texte →",
     "shareCaptionCopied": "✓ Texte copié"
+  },
+  "wordcloud": {
+    "back": "← ADMIN",
+    "title": "Nuage de mots",
+    "eyebrow": "Le mur de {name}, en mots",
+    "download": "↓ Télécharger l'image",
+    "exporting": "Export...",
+    "empty": "Pas encore assez de messages pour générer un nuage de mots."
   },
   "shareBlock": {
     "label": "LIEN À PARTAGER",

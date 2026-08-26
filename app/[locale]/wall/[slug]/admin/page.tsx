@@ -61,6 +61,7 @@ export default async function AdminPage({ params }: { params: Promise<{ slug: st
           </div>
           <div style={{ display: 'flex', gap: 'var(--s-3)', alignItems: 'flex-start' }}>
             <Link href={`/wall/${slug}/collage`} className="btn btn--solid">{t('collageLink')}</Link>
+            <Link href={`/wall/${slug}/wordcloud`} className="btn btn--solid">{t('wordcloudLink')}</Link>
             <RenderTrigger wallSlug={slug} />
           </div>
         </div>
