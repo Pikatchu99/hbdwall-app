@@ -39,21 +39,12 @@ async function buildInputProps(jobId: string): Promise<{ inputProps: WallReplayI
   const job = await prisma.renderJob.findUniqueOrThrow({ where: { id: jobId } })
   const wall = await prisma.wall.findUniqueOrThrow({ where: { id: job.wallId } })
 
-  const [messages, allMessages] = await Promise.all([
-    prisma.message.findMany({
-      where: { wallId: wall.id, isHidden: false },
-      orderBy: [{ isPinned: 'desc' }, { createdAt: 'desc' }],
-      take: 4,
-      select: { id: true, authorName: true, content: true, photoUrl: true },
-    }),
-    prisma.message.findMany({
-      where: { wallId: wall.id, isHidden: false },
-      orderBy: { createdAt: 'desc' },
-      select: { id: true, authorName: true, photoUrl: true, content: true },
-    }),
-  ])
+  const allMessages = await prisma.message.findMany({
+    where: { wallId: wall.id, isHidden: false },
+    select: { id: true, authorName: true, content: true, photoUrl: true, isPinned: true },
+  })
 
-  const inputProps = buildWallReplayInputProps(wall, messages, allMessages)
+  const inputProps = buildWallReplayInputProps(wall, allMessages)
 
   return { inputProps, wallSlug: wall.slug }
 }
