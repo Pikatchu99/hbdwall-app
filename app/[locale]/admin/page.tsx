@@ -127,7 +127,7 @@ export default async function AdminDashboard({
         </div>
 
         {/* Stats */}
-        <div style={{ display: 'flex', gap: '1px', background: 'var(--border)', marginBottom: 'var(--s-12)' }}>
+        <div className="super-admin-stats" style={{ display: 'flex', gap: '1px', background: 'var(--border)', marginBottom: 'var(--s-12)' }}>
           <StatBox label={t('users')} value={totalUsers} />
           <StatBox label={t('walls')} value={totalWalls} />
           <StatBox label={t('messages')} value={totalMessages} />
@@ -162,7 +162,7 @@ export default async function AdminDashboard({
         )}
 
 {/* Links */}
-        <div style={{ marginBottom: 'var(--s-8)', display: 'flex', justifyContent: 'flex-end', gap: 'var(--s-3)' }}>
+        <div className="super-admin-links" style={{ marginBottom: 'var(--s-8)', display: 'flex', justifyContent: 'flex-end', gap: 'var(--s-3)' }}>
           <Link href="/admin/users" className="btn btn--ghost" style={{ fontSize: '11px' }}>
             Utilisateurs →
           </Link>
@@ -178,10 +178,10 @@ export default async function AdminDashboard({
         </div>
 
         {/* Main layout : sidebar + results */}
-        <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: 'var(--s-8)', alignItems: 'start' }}>
+        <div className="super-admin-layout" style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: 'var(--s-8)', alignItems: 'start' }}>
 
           {/* Sidebar filtres */}
-          <div style={{ position: 'sticky', top: 'var(--s-6)' }}>
+          <div className="super-admin-sidebar" style={{ position: 'sticky', top: 'var(--s-6)' }}>
             <Suspense>
               <AdminFilters total={filtered.length} />
             </Suspense>
