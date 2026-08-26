@@ -148,6 +148,7 @@
   "wallAdmin": {
     "title": "Manage messages",
     "breadcrumbMessages": "Messages",
+    "exportsLabel": "EXPORTS",
     "collageLink": "→ Collage",
     "wordcloudLink": "→ Word Cloud",
     "renderLink": "→ Wall Replay",
@@ -258,6 +259,12 @@
     "download": "↓ Download image",
     "exporting": "Exporting...",
     "empty": "Not enough messages yet to generate a word cloud."
+  },
+  "wallReplay": {
+    "back": "← Admin",
+    "title": "Wall Replay",
+    "subtitle": "An animated preview of your wall, like reliving it in video.",
+    "exportHint": "Ready to keep it or share it?"
   },
   "shareBlock": {
     "label": "SHARE LINK",

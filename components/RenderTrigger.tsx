@@ -95,7 +95,7 @@ export default function RenderTrigger({ wallSlug, initialJob }: { wallSlug: stri
       <p className="t-small">
         {t('renderDone')}{finishedLabel ? ` · ${finishedLabel}` : ''}
       </p>
-      <div style={{ display: 'flex', gap: 'var(--s-3)', alignItems: 'center' }}>
+      <div style={{ display: 'flex', gap: 'var(--s-3)', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
         {job.videoUrl && <a href={job.videoUrl} download className="t-small link">{t('renderDownload')}</a>}
         {job.videoUrl && (
           <button className="t-small link" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }} onClick={() => setShowVideo(v => !v)}>

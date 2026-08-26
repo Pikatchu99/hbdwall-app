@@ -41,11 +41,11 @@ export default async function AdminPage({ params }: { params: Promise<{ slug: st
   const t = await getTranslations('wallAdmin')
 
   return (
-    <main style={{ minHeight: '100vh' }}>
+    <main data-theme="joyful" style={{ minHeight: '100vh' }}>
       <Nav />
       <div style={{ maxWidth: '1000px', margin: '0 auto', padding: 'var(--s-8) var(--s-4)' }}>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--s-3)', marginBottom: 'var(--s-8)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--s-3)', marginBottom: 'var(--s-8)', flexWrap: 'wrap' }}>
           <Link href="/dashboard" className="t-small t-muted link">Dashboard</Link>
           <span className="t-small t-muted">·</span>
           <span className="t-small t-muted">{wall.title}</span>
@@ -53,17 +53,18 @@ export default async function AdminPage({ params }: { params: Promise<{ slug: st
           <span className="t-small">{t('breadcrumbMessages')}</span>
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'var(--s-8)', paddingBottom: 'var(--s-6)', borderBottom: 'var(--border-w) solid var(--border)' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-start', gap: 'var(--s-6)', marginBottom: 'var(--s-8)', paddingBottom: 'var(--s-6)', borderBottom: 'var(--border-w) solid var(--border)' }}>
           <div>
             <h1 className="t-h2" style={{ marginBottom: 'var(--s-1)' }}>{t('title')}</h1>
             <p className="t-small t-muted">{guestMessageCount} message{guestMessageCount > 1 ? 's' : ''} · {wall.title} · du plus récent au plus ancien</p>
           </div>
-          <div style={{ display: 'flex', gap: 'var(--s-3)', alignItems: 'flex-start' }}>
-            <Link href={`/wall/${slug}/collage`} className="btn btn--solid">{t('collageLink')}</Link>
-            <Link href={`/wall/${slug}/wordcloud`} className="btn btn--solid">{t('wordcloudLink')}</Link>
-            <span className="btn btn--ghost" style={{ opacity: 0.5, cursor: 'default' }} aria-disabled="true">
-              {t('renderComingSoon')}
-            </span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--s-2)', alignItems: 'flex-end' }}>
+            <span className="t-label t-muted">{t('exportsLabel')}</span>
+            <div style={{ display: 'flex', gap: 'var(--s-2)', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+              <Link href={`/wall/${slug}/collage`} className="btn btn--solid">{t('collageLink')}</Link>
+              <Link href={`/wall/${slug}/wordcloud`} className="btn btn--solid">{t('wordcloudLink')}</Link>
+              <Link href={`/wall/${slug}/replay`} className="btn btn--solid">{t('renderLink')}</Link>
+            </div>
           </div>
         </div>
 

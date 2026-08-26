@@ -148,6 +148,7 @@
   "wallAdmin": {
     "title": "Gestion des messages",
     "breadcrumbMessages": "Messages",
+    "exportsLabel": "EXPORTS",
     "collageLink": "→ Collage",
     "wordcloudLink": "→ Nuage de mots",
     "renderLink": "→ Wall Replay",
@@ -258,6 +259,12 @@
     "download": "↓ Télécharger l'image",
     "exporting": "Export...",
     "empty": "Pas encore assez de messages pour générer un nuage de mots."
+  },
+  "wallReplay": {
+    "back": "← Admin",
+    "title": "Wall Replay",
+    "subtitle": "Un aperçu animé de ton mur, comme si tu le revivais en vidéo.",
+    "exportHint": "Prêt à le garder ou le partager ?"
   },
   "shareBlock": {
     "label": "LIEN À PARTAGER",

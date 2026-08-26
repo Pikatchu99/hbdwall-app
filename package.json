@@ -21,6 +21,7 @@
     "@remotion/bundler": "^4.0.516",
     "@remotion/cli": "^4.0.516",
     "@remotion/google-fonts": "^4.0.516",
+    "@remotion/player": "4.0.516",
     "@remotion/renderer": "^4.0.516",
     "bcryptjs": "^3.0.3",
     "boring-avatars": "^2.0.4",

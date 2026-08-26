@@ -613,6 +613,19 @@ textarea.input     { min-height: 100px; resize: vertical; }
   /* Admin messages grid - 1 col on mobile */
   .admin-grid { grid-template-columns: 1fr !important; }
 
+  /* Super-admin dashboard - empile la sidebar de filtres au-dessus des résultats,
+     sinon la colonne 220px fixe écrase la colonne de contenu sur petit écran. */
+  .super-admin-layout { grid-template-columns: 1fr !important; }
+  .super-admin-sidebar { position: static !important; }
+  .super-admin-stats { flex-wrap: wrap; }
+  .super-admin-stats > div { flex: 1 1 40%; }
+  .super-admin-links { flex-wrap: wrap; }
+
+  /* Zones tactiles : plusieurs écrans admin réduisent .btn à 10px/4px de padding
+     (bien en dessous des ~40px recommandés au tactile) — on relève un plancher
+     de hauteur sans toucher à la mise en page desktop. */
+  .btn { min-height: 40px; }
+
 /* Birthday ticket button */
 .btn-ticket {
   display: block;
