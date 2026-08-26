@@ -260,6 +260,12 @@
     "exporting": "Exporting...",
     "empty": "Not enough messages yet to generate a word cloud."
   },
+  "wallReplay": {
+    "back": "← Admin",
+    "title": "Wall Replay",
+    "subtitle": "An animated preview of your wall, like reliving it in video.",
+    "exportHint": "Ready to keep it or share it?"
+  },
   "shareBlock": {
     "label": "SHARE LINK",
     "copy": "Copy link",

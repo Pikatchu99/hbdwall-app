@@ -11,14 +11,13 @@ import { renderMedia, selectComposition } from '@remotion/renderer'
 import { PrismaClient } from '../app/generated/prisma/client'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { uploadBufferToR2 } from '../lib/r2'
-import { buildWordCloud } from '../lib/wordCloud'
+import { buildWallReplayInputProps } from '../lib/wallReplay'
 import type { WallReplayInputProps } from '../remotion/types'
 
 const adapter = new PrismaPg({ connectionString: process.env.DIRECT_DATABASE_URL! })
 const prisma = new PrismaClient({ adapter } as any)
 
 const POLL_INTERVAL_MS = 5000
-const HBDWALL_SOCIALS = { instagram: 'instagram.com/hbdwall', tiktok: 'tiktok.com/@hbdwall' }
 
 async function claimNextJob() {
   const rows = await prisma.$queryRaw<{ id: string }[]>`
@@ -54,19 +53,7 @@ async function buildInputProps(jobId: string): Promise<{ inputProps: WallReplayI
     }),
   ])
 
-  const authorCount = new Set(allMessages.map(m => m.authorName?.trim()).filter(Boolean)).size
-  const photoCount = allMessages.filter(m => m.photoUrl).length
-  const wordCloud = buildWordCloud(allMessages.map(m => m.content))
-
-  const inputProps: WallReplayInputProps = {
-    wallSlug: wall.slug,
-    recipientName: wall.recipientName?.trim() || wall.title,
-    wallDateLabel: new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'long' }).format(wall.date),
-    stats: { messageCount: allMessages.length, authorCount, photoCount },
-    messages,
-    wordCloud,
-    socials: HBDWALL_SOCIALS,
-  }
+  const inputProps = buildWallReplayInputProps(wall, messages, allMessages)
 
   return { inputProps, wallSlug: wall.slug }
 }

@@ -63,10 +63,8 @@ export default async function AdminPage({ params }: { params: Promise<{ slug: st
             <div style={{ display: 'flex', gap: 'var(--s-2)', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
               <Link href={`/wall/${slug}/collage`} className="btn btn--solid">{t('collageLink')}</Link>
               <Link href={`/wall/${slug}/wordcloud`} className="btn btn--solid">{t('wordcloudLink')}</Link>
+              <Link href={`/wall/${slug}/replay`} className="btn btn--solid">{t('renderLink')}</Link>
             </div>
-            <span className="btn btn--ghost" style={{ opacity: 0.5, cursor: 'default' }} aria-disabled="true">
-              {t('renderComingSoon')}
-            </span>
           </div>
         </div>
 
