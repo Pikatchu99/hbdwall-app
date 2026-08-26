@@ -9,9 +9,16 @@ interface RenderJob {
   errorMessage: string | null
 }
 
-export default function RenderTrigger({ wallSlug }: { wallSlug: string }) {
+interface InitialRenderJob {
+  id: string
+  status: string
+  videoUrl: string | null
+  errorMessage: string | null
+}
+
+export default function RenderTrigger({ wallSlug, initialJob }: { wallSlug: string; initialJob: InitialRenderJob | null }) {
   const t = useTranslations('wallAdmin')
-  const [job, setJob] = useState<RenderJob | null>(null)
+  const [job, setJob] = useState<RenderJob | null>(initialJob as RenderJob | null)
   const [loading, setLoading] = useState(false)
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
@@ -33,7 +40,15 @@ export default function RenderTrigger({ wallSlug }: { wallSlug: string }) {
     }, 3000)
   }
 
-  useEffect(() => stopPolling, [])
+  useEffect(() => {
+    // Reprend le suivi d'un rendu déjà en cours au moment où la page a été chargée
+    // (ex: le propriétaire a lancé un rendu puis a rafraîchi/rouvert la page).
+    if (initialJob && (initialJob.status === 'pending' || initialJob.status === 'rendering')) {
+      startPolling(initialJob.id)
+    }
+    return stopPolling
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   async function trigger() {
     setLoading(true)
