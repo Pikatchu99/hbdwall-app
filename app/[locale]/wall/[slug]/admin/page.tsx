@@ -34,7 +34,7 @@ export default async function AdminPage({ params }: { params: Promise<{ slug: st
   const lastRenderJob = await prisma.renderJob.findFirst({
     where: { wallId: wall.id },
     orderBy: { createdAt: 'desc' },
-    select: { id: true, status: true, videoUrl: true, errorMessage: true },
+    select: { id: true, status: true, videoUrl: true, errorMessage: true, finishedAt: true },
   })
 
   const messages = wall.messages.map(m => ({
@@ -68,7 +68,10 @@ export default async function AdminPage({ params }: { params: Promise<{ slug: st
           <div style={{ display: 'flex', gap: 'var(--s-3)', alignItems: 'flex-start' }}>
             <Link href={`/wall/${slug}/collage`} className="btn btn--solid">{t('collageLink')}</Link>
             <Link href={`/wall/${slug}/wordcloud`} className="btn btn--solid">{t('wordcloudLink')}</Link>
-            <RenderTrigger wallSlug={slug} initialJob={lastRenderJob} />
+            <RenderTrigger
+              wallSlug={slug}
+              initialJob={lastRenderJob && { ...lastRenderJob, finishedAt: lastRenderJob.finishedAt?.toISOString() ?? null }}
+            />
           </div>
         </div>
 
