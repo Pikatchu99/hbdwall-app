@@ -19,16 +19,10 @@ export default async function WallReplayPage({ params }: { params: Promise<{ slu
   const me = await prisma.user.findUnique({ where: { id: session.userId }, select: { isAdmin: true } })
   if (wall.userId !== session.userId && !me?.isAdmin) redirect('/dashboard')
 
-  const [featuredMessages, allMessages, lastRenderJob] = await Promise.all([
+  const [allMessages, lastRenderJob] = await Promise.all([
     prisma.message.findMany({
       where: { wallId: wall.id, isHidden: false },
-      orderBy: [{ isPinned: 'desc' }, { createdAt: 'desc' }],
-      take: 4,
-      select: { id: true, authorName: true, content: true, photoUrl: true },
-    }),
-    prisma.message.findMany({
-      where: { wallId: wall.id, isHidden: false },
-      select: { authorName: true, content: true, photoUrl: true },
+      select: { id: true, authorName: true, content: true, photoUrl: true, isPinned: true },
     }),
     prisma.renderJob.findFirst({
       where: { wallId: wall.id },
@@ -37,7 +31,7 @@ export default async function WallReplayPage({ params }: { params: Promise<{ slu
     }),
   ])
 
-  const inputProps = buildWallReplayInputProps(wall, featuredMessages, allMessages)
+  const inputProps = buildWallReplayInputProps(wall, allMessages)
   const t = await getTranslations('wallReplay')
 
   return (
