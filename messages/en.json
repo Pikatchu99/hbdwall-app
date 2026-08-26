@@ -151,6 +151,7 @@
     "collageLink": "→ Collage",
     "wordcloudLink": "→ Word Cloud",
     "renderLink": "→ Wall Replay",
+    "renderComingSoon": "Wall Replay — coming soon",
     "renderPending": "Generating…",
     "renderFailed": "Generation failed.",
     "renderRetry": "Redo",

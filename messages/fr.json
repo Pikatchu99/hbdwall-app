@@ -151,6 +151,7 @@
     "collageLink": "→ Collage",
     "wordcloudLink": "→ Nuage de mots",
     "renderLink": "→ Wall Replay",
+    "renderComingSoon": "Wall Replay — bientôt disponible",
     "renderPending": "Génération en cours…",
     "renderFailed": "La génération a échoué.",
     "renderRetry": "Refaire",
