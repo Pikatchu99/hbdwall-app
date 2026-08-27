@@ -18,6 +18,7 @@ export default async function YearsPage({ params }: { params: Promise<{ slug: st
     include: { user: { select: { name: true } } },
   })
   if (!wall) notFound()
+  const recipientName = wall.recipientName ?? wall.user.name
 
   const editions = await prisma.edition.findMany({
     where: { wallId: wall.id },
@@ -73,7 +74,7 @@ export default async function YearsPage({ params }: { params: Promise<{ slug: st
         padding: 'var(--s-16) var(--s-6) var(--s-8)',
       }}>
         <p className="t-label t-muted" style={{ marginBottom: 'var(--s-2)', letterSpacing: 'var(--tracking-label)' }}>
-          {isOwner ? t('ownerKicker') : t('guestKicker', { name: wall.user.name })}
+          {isOwner ? t('ownerKicker') : t('guestKicker', { name: recipientName })}
         </p>
         <p className="t-body t-muted">{t('editions', { count: editions.length })}</p>
       </header>

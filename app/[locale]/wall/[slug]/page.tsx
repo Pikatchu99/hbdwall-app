@@ -148,11 +148,11 @@ export default async function WallPage({
             })}
           </p>
           <WishlistButton
-            ownerName={wall.user.name}
+            ownerName={recipientName}
             items={wishlistItems.map(i => ({ id: i.id, title: i.title, url: i.url, price: i.price }))}
           />
         </div>
-        <BirthdayCountdown date={wall.date.toISOString()} name={wall.user.name} />
+        <BirthdayCountdown date={wall.date.toISOString()} name={recipientName} />
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--s-3)', marginBottom: 'var(--s-3)', flexWrap: 'wrap' }}>
           <Avatar name={wall.user.pseudo} src={wall.user.image} size={64} />
           <h1 className="t-h1">{t('birthdayTitle', { name: recipientName })}</h1>
@@ -173,7 +173,7 @@ export default async function WallPage({
         <WallClient
           wallSlug={slug}
           initialMessages={messages}
-          ownerName={wall.user.name}
+          ownerName={recipientName}
           isAdmin={isAdmin}
           isOwner={isOwner}
           instagramPostUrl={wall.instagramPost?.url}

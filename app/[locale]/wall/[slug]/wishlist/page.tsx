@@ -51,7 +51,7 @@ export default async function WishlistPage({ params }: { params: Promise<{ slug:
 
         <WishlistManager
           slug={slug}
-          ownerName={wall.user.name}
+          ownerName={wall.recipientName ?? wall.user.name}
           initialItems={items.map(i => ({ id: i.id, title: i.title, url: i.url, price: i.price }))}
         />
       </div>

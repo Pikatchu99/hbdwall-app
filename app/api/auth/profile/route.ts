@@ -45,13 +45,22 @@ export async function PATCH(request: NextRequest) {
   }
 
   if (data.name && user) {
-    await prisma.wall.updateMany({
+    // Seul le wall "principal" (le premier créé, celui de l'utilisateur pour lui-même)
+    // doit suivre son nom de profil — pas les walls qu'il a créés pour d'autres personnes,
+    // sans quoi renommer son propre profil écrase leur recipientName.
+    const primaryWall = await prisma.wall.findFirst({
       where: { userId },
-      data: {
-        title: `Anniversaire de ${data.name}`,
-        recipientName: data.name,
-      },
+      orderBy: { createdAt: 'asc' },
     })
+    if (primaryWall) {
+      await prisma.wall.update({
+        where: { id: primaryWall.id },
+        data: {
+          title: `Anniversaire de ${data.name}`,
+          recipientName: data.name,
+        },
+      })
+    }
     session.name = user.name
     await session.save()
   }
