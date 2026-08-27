@@ -48,11 +48,19 @@ export async function POST(req: NextRequest) {
     const bMonth = d.getMonth() + 1
     const bDay = d.getDate()
 
+    // Le destinataire n'a pas forcément de compte (c'est souvent le créateur qui
+    // reçoit la notif pour un wall fait pour quelqu'un d'autre) — le texte doit
+    // donc parler de son anniversaire à LUI, pas prétendre que c'est le nôtre.
+    const isForSomeoneElse = !!wall.recipientName && wall.recipientName.trim().toLowerCase() !== wall.user.name.trim().toLowerCase()
+    const recipientName = wall.recipientName || wall.user.name
+
     // Jour J
     if (bMonth === month && bDay === day) {
       sent += await sendToSubs(wall.user.pushSubscriptions, {
-        title: `🎉 C'est ton anniversaire !`,
-        body: `Joyeux anniversaire ! 🎊 Tes proches t'ont laissé des messages sur ton wall.`,
+        title: isForSomeoneElse ? `🎉 C'est l'anniversaire de ${recipientName} !` : `🎉 C'est ton anniversaire !`,
+        body: isForSomeoneElse
+          ? `Va voir les messages laissés sur son wall — ou laisse le tien !`
+          : `Joyeux anniversaire ! 🎊 Tes proches t'ont laissé des messages sur ton wall.`,
         url: `/wall/${wall.slug}`,
       })
     }
@@ -60,8 +68,10 @@ export async function POST(req: NextRequest) {
     // Veille
     if (bMonth === tomorrowMonth && bDay === tomorrowDay) {
       sent += await sendToSubs(wall.user.pushSubscriptions, {
-        title: `🔔 Ton anniversaire c'est demain !`,
-        body: `Partage ton wall pour recevoir des messages de tes proches.`,
+        title: isForSomeoneElse ? `🔔 L'anniversaire de ${recipientName} c'est demain !` : `🔔 Ton anniversaire c'est demain !`,
+        body: isForSomeoneElse
+          ? `Partage son wall pour qu'on lui laisse des messages.`
+          : `Partage ton wall pour recevoir des messages de tes proches.`,
         url: `/wall/${wall.slug}`,
       })
     }

@@ -58,6 +58,7 @@ jobs:
             VAPID_MAILTO=${{ secrets.VAPID_MAILTO }}
 
             CRON_SECRET=${{ secrets.CRON_SECRET }}
+            ADMIN_API_SECRET=${{ secrets.ADMIN_API_SECRET }}
             ENVEOF
 
             echo "🔍 Verifying .env file was created..."
