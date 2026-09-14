@@ -1059,17 +1059,31 @@ textarea.input     { min-height: 100px; resize: vertical; }
    ombres dures).
    ============================================================ */
 .candle-fab {
-  position: fixed; right: 18px; bottom: 18px; z-index: 900;
-  width: 60px; height: 60px; padding: 0; cursor: pointer;
+  position: fixed; right: 16px; bottom: 20px; z-index: 900;
+  width: 72px; height: 72px; padding: 0; cursor: pointer;
   display: inline-flex; align-items: center; justify-content: center;
   background: var(--surface); color: var(--fg);
   border: var(--border-w) solid var(--border-strong); border-radius: var(--radius);
   box-shadow: var(--shadow);
   transition: transform .15s var(--ease);
 }
+/* Halo qui pulse autour du bouton : on doit le remarquer sans le chercher. */
+.candle-fab::before {
+  content: ''; position: absolute; inset: -6px; border-radius: inherit; pointer-events: none;
+  border: 3px solid var(--accent); opacity: 0;
+  animation: candle-halo 2.6s ease-out infinite;
+}
+@keyframes candle-halo {
+  0%   { opacity: .8; transform: scale(.9); }
+  70%  { opacity: 0;  transform: scale(1.25); }
+  100% { opacity: 0;  transform: scale(1.25); }
+}
+@media (prefers-reduced-motion: reduce) { .candle-fab::before { animation: none; } }
 .candle-fab:hover { transform: translateY(-2px); }
 .candle-fab:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-.candle-fab .candle--small { width: 26px; height: 48px; padding: 0; }
+.candle-fab .candle--small { width: 34px; height: 64px; padding: 0; }
+/* Sur le bouton, la flamme reste allumée même après avoir soufflé : c'est l'invitation. */
+.candle-fab .candle-glow { opacity: .35; }
 .candle-fab-count {
   position: absolute; top: -8px; right: -8px; min-width: 22px; height: 22px; padding: 0 6px;
   display: inline-flex; align-items: center; justify-content: center;
@@ -1079,7 +1093,7 @@ textarea.input     { min-height: 100px; resize: vertical; }
 [data-theme="joyful"] .candle-fab { border-radius: 999px; box-shadow: var(--v-sh-sm); background: #fff; }
 [data-theme="joyful"] .candle-fab:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--v-ink); }
 [data-theme="joyful"] .candle-fab-count { border-radius: 999px; }
-@media (min-width: 720px) { .candle-fab { right: 28px; bottom: 28px; } }
+@media (min-width: 720px) { .candle-fab { right: 28px; bottom: 28px; width: 76px; height: 76px; } .candle-fab .candle--small { width: 36px; height: 68px; } }
 
 /* Fenêtre de souffle */
 .candle-overlay {
@@ -1134,10 +1148,9 @@ textarea.input     { min-height: 100px; resize: vertical; }
   animation: candle-flicker 1.6s ease-in-out infinite;
 }
 .candle.is-listening .candle-flame { animation-duration: .9s; }
-.candle.is-out .candle-flame, .candle-fab.is-out .candle-flame { opacity: 0; transform: scale(.2) translateY(20px); animation: none; }
+.candle.is-out .candle-flame { opacity: 0; transform: scale(.2) translateY(20px); animation: none; }
 .candle-smoke { opacity: 0; transform-origin: 40px 40px; }
 .candle.is-out .candle-smoke { animation: candle-smoke 2.4s ease-out forwards; }
-.candle-fab.is-out .candle-smoke { opacity: .5; }
 @keyframes candle-flicker {
   0%, 100% { scale: 1 1; }
   30% { scale: .96 1.04; translate: 1px 0; }
