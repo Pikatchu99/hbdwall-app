@@ -5,6 +5,8 @@ import confetti from 'canvas-confetti'
 interface Props {
   date: string
   name: string
+  /** Couleurs des confettis du jour J (défaut : palette joyeuse). */
+  confettiColors?: string[]
 }
 
 function getCountdown(targetDate: string) {
@@ -31,7 +33,7 @@ function getCountdown(targetDate: string) {
   return { isToday: false, days, hours, minutes, seconds }
 }
 
-export default function BirthdayCountdown({ date, name }: Props) {
+export default function BirthdayCountdown({ date, name, confettiColors }: Props) {
   const [countdown, setCountdown] = useState<ReturnType<typeof getCountdown> | null>(null)
 
   useEffect(() => {
@@ -46,13 +48,13 @@ export default function BirthdayCountdown({ date, name }: Props) {
       particleCount: 120,
       spread: 80,
       origin: { y: 0.6 },
-      colors: ['#7B61FF', '#ffffff', '#111111', '#cccccc'],
+      colors: confettiColors ?? ['#7B61FF', '#ffffff', '#111111', '#cccccc'],
     })
     burst()
     const t1 = setTimeout(burst, 800)
     const t2 = setTimeout(burst, 1600)
     return () => { clearTimeout(t1); clearTimeout(t2) }
-  }, [countdown?.isToday])
+  }, [countdown?.isToday, confettiColors])
 
   if (!countdown) return null
 

@@ -155,11 +155,18 @@ export default async function WallPage({
           countLabel={sigLocale === 'en'
             ? `${guestCount} ${guestCount > 1 ? 'notes' : 'note'} already`
             : `${guestCount} ${guestCount > 1 ? 'mots' : 'mot'} déjà`}
-          countdown={<BirthdayCountdown date={wall.date.toISOString()} name={recipientName} />}
+          countdown={
+            <BirthdayCountdown
+              date={wall.date.toISOString()}
+              name={recipientName}
+              confettiColors={[signature.og.accent, signature.og.badge, signature.og.heart, signature.og.paper, signature.og.ink]}
+            />
+          }
           wishlist={
             <WishlistButton
               ownerName={recipientName}
               items={wishlistItems.map(i => ({ id: i.id, title: i.title, url: i.url, price: i.price }))}
+              variant="pill"
             />
           }
         />
