@@ -319,7 +319,7 @@ a.link:hover, .link:hover { color: var(--accent); }
 [data-theme="joyful"] .countdown-cell--lead { background: var(--v-violet); }
 [data-theme="joyful"] .countdown-cell--lead .countdown-label { color: rgba(255,255,255,0.75); }
 [data-theme="joyful"] .countdown-today { background: var(--v-violet); border: var(--v-line) solid var(--v-ink); border-radius: var(--r); box-shadow: var(--v-sh); }
-[data-theme="joyful"] .countdown-today-eyebrow { color: rgba(255,255,255,0.7); }
+[data-theme="joyful"] .countdown-today-eyebrow { color: rgba(255,255,255,0.92); }
 [data-theme="joyful"] .countdown-today-dot { background: var(--v-lime); }
 
 /* ── Inverted ── */
@@ -1040,3 +1040,14 @@ textarea.input     { min-height: 100px; resize: vertical; }
   .sig-sticker--crown { top: 4%; left: 42%; }
   .sig-sticker--sparkle, .sig-sticker--confetti { display: none; }
 }
+
+/* Wishlist en bouton plein (murs signature) : icône cadeau qui remue doucement. */
+.wishlist-cta { display: inline-flex; align-items: center; gap: var(--s-2); }
+.wishlist-cta svg { animation: wishlist-wiggle 2.4s ease-in-out infinite; transform-origin: 50% 80%; }
+@keyframes wishlist-wiggle {
+  0%, 60%, 100% { transform: rotate(0); }
+  70% { transform: rotate(-12deg); }
+  80% { transform: rotate(10deg); }
+  90% { transform: rotate(-6deg); }
+}
+@media (prefers-reduced-motion: reduce) { .wishlist-cta svg { animation: none; } }

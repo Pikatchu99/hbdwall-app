@@ -13,7 +13,8 @@ type Item = {
 
 // Bouton pulsant à côté du titre du wall. Au clic, ouvre la wishlist dans une
 // modale avec un effet « reveal » (comme si on ouvrait une page). Invités uniquement.
-export default function WishlistButton({ ownerName, items }: { ownerName: string; items: Item[] }) {
+// `variant="pill"` : bouton plein bien visible (murs signature) au lieu du lien discret.
+export default function WishlistButton({ ownerName, items, variant = 'inline' }: { ownerName: string; items: Item[]; variant?: 'inline' | 'pill' }) {
   const t = useTranslations('wishlist')
   const [open, setOpen] = useState(false)
 
@@ -21,6 +22,11 @@ export default function WishlistButton({ ownerName, items }: { ownerName: string
 
   return (
     <>
+      {variant === 'pill' ? (
+        <button onClick={() => setOpen(true)} className="btn btn--solid wishlist-cta">
+          <Gift size={16} aria-hidden /> {t('buttonCta')}
+        </button>
+      ) : (
       <button
         onClick={() => setOpen(true)}
         className="t-label wishlist-pulse"
@@ -39,6 +45,7 @@ export default function WishlistButton({ ownerName, items }: { ownerName: string
       >
         <Gift size={14} aria-hidden /> {t('buttonLabel')}
       </button>
+      )}
 
       <AnimatePresence>
         {open && (
