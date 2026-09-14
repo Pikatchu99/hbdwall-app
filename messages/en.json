@@ -510,14 +510,14 @@
     "cta": "Blow out the candle",
     "starting": "One second…",
     "listening": "Listening… blow!",
-    "tapHint": "Or tap the candle",
-    "fallback": "The mic didn't cooperate: tap the candle to blow.",
+    "fallback": "Blowing needs a microphone. Allow it in your browser, then try again. Otherwise the candle will wait for you.",
     "blown": "Your wish is on its way ✦",
-    "blownHint": "The candle will relight for the next person.",
+    "blownHint": "The candle relights in {seconds}s.",
     "count": "{count, plural, =0 {No candle blown out yet} one {# candle blown out} other {# candles blown out}}",
     "open": "Blow out a candle",
+    "retry": "Try again with the mic",
     "close": "Close",
-    "aria": "Lit candle, press to blow it out",
+    "aria": "Lit candle",
     "ariaOut": "Candle blown out"
   }
 }

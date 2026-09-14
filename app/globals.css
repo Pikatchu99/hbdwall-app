@@ -1127,12 +1127,11 @@ textarea.input     { min-height: 100px; resize: vertical; }
 
 /* La bougie : un bouton (repli tactile), SVG dessiné aux tokens. */
 .candle {
-  background: none; border: none; padding: var(--s-2); cursor: pointer; color: var(--fg);
+  background: none; border: none; padding: var(--s-2); color: var(--fg);
   display: inline-flex; border-radius: var(--radius);
 }
 .candle svg { width: 100%; height: 100%; }
 .candle--big { width: 96px; height: 180px; }
-.candle:disabled { cursor: default; }
 .candle:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 .candle-body   { fill: var(--surface); stroke: var(--fg); stroke-width: 3; }
 .candle-stripe { fill: var(--accent); }
