@@ -12,7 +12,7 @@ interface Props {
   countLabel: string
   /** Compte à rebours (client) rendu sous le texte. */
   countdown: ReactNode
-  /** Bouton wishlist, posé sur la ligne du haut du texte. */
+  /** Bouton wishlist, sur sa propre ligne sous la description. */
   wishlist: ReactNode
 }
 
@@ -105,12 +105,10 @@ export default function WallCover({
 
       <div className="sig-body">
         <div className="sig-text">
-          <div className="sig-topline">
-            <p className="sig-eyebrow">{eyebrow}</p>
-            {wishlist}
-          </div>
+          <p className="sig-eyebrow">{eyebrow}</p>
           <h1 id="sig-name" className="sig-name"><mark>{name}</mark></h1>
           <p className="sig-desc">{description}</p>
+          <div className="sig-actions">{wishlist}</div>
           <div className="sig-countdown">{countdown}</div>
         </div>
       </div>

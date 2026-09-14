@@ -81,7 +81,9 @@ jobs:
             fi
 
             echo "🏗️ Building Docker images (this may take a while)..."
-            docker compose build --no-cache
+            # Cache de couches activé : les deps ne sont réinstallées que si le lockfile change,
+            # et le cache webpack de Next est conservé entre deux builds (mount BuildKit du Dockerfile).
+            docker compose build
 
             echo "🚀 Replacing containers..."
             docker compose up -d --remove-orphans
