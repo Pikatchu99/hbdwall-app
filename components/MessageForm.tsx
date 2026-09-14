@@ -3,8 +3,10 @@ import { useState, useRef, useEffect } from 'react'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import confetti from 'canvas-confetti'
+import { Flame } from 'lucide-react'
 import { track } from '@/lib/analytics'
 import { captureRefWall } from '@/lib/referral'
+import { openCandle } from './CandleBlow'
 
 interface Props {
   wallSlug: string
@@ -15,9 +17,11 @@ interface Props {
   prompts?: string[]
   /** Vocal joué une fois le message envoyé (murs signature). */
   thanksAudio?: string
+  /** Après l'envoi, proposer de souffler une bougie (ouvre la bougie flottante). */
+  candle?: boolean
 }
 
-export default function MessageForm({ wallSlug, recipientName, onSuccess, isOwner = false, prompts, thanksAudio }: Props) {
+export default function MessageForm({ wallSlug, recipientName, onSuccess, isOwner = false, prompts, thanksAudio, candle = false }: Props) {
   const t = useTranslations('messageForm')
   const [form, setForm] = useState({ authorName: '', content: '' })
   const [file, setFile] = useState<File | null>(null)
@@ -102,6 +106,16 @@ export default function MessageForm({ wallSlug, recipientName, onSuccess, isOwne
         <p className="t-h3" style={{ textAlign: 'center', marginBottom: 'var(--s-2)' }}>
           {t('successMessage', { name: recipientName })}
         </p>
+        {candle && (
+          <button
+            type="button"
+            className="btn btn--ghost"
+            style={{ alignSelf: 'center', display: 'inline-flex', alignItems: 'center', gap: 'var(--s-2)' }}
+            onClick={() => { track('candle_cta_post_message', { wallSlug }); openCandle() }}
+          >
+            <Flame size={16} aria-hidden /> {t('blowCandle', { name: recipientName })}
+          </button>
+        )}
         {!isOwner && (
           <>
             <p className="t-body" style={{ textAlign: 'center' }}>{t('successHint')}</p>
