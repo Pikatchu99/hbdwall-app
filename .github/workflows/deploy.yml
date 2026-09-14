@@ -31,13 +31,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Variables lues par `next build` (next.config remotePatterns, NEXT_PUBLIC_*).
-      # Valeurs publiques uniquement : ce .env entre dans le contexte de build.
+      # Variables lues par `next build` : remotePatterns (R2_PUBLIC_URL), NEXT_PUBLIC_*
+      # (inlinées dans le bundle client), et celles que des modules exigent à l'import
+      # (lib/session.ts, lib/webpush.ts) pendant la collecte des routes. Pour ces
+      # dernières, des valeurs factices au bon format : le runtime reçoit les vraies
+      # via docker compose, et ce .env n'entre pas dans l'image finale.
+      # Aucun secret ici : ce .env entre dans le contexte et le cache de build.
       - name: Build-time env
         run: |
           cat > .env << 'ENVEOF'
           R2_PUBLIC_URL=${{ secrets.R2_PUBLIC_URL }}
           NEXT_PUBLIC_VAPID_PUBLIC_KEY=${{ secrets.NEXT_PUBLIC_VAPID_PUBLIC_KEY }}
+          SESSION_SECRET=build-time-placeholder-never-used-at-runtime-0000
+          VAPID_PUBLIC_KEY=${{ secrets.NEXT_PUBLIC_VAPID_PUBLIC_KEY }}
+          VAPID_PRIVATE_KEY=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+          VAPID_MAILTO=mailto:build@hbdwall.xyz
           ENVEOF
 
       - uses: docker/setup-buildx-action@v3
