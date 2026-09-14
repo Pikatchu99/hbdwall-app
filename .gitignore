@@ -60,3 +60,6 @@ remotion.bundle/
 
 # internal marketing content assets (not part of the app)
 /Birthday Content Creation/
+
+# per-wall signature assets (private photos, never in the public repo)
+/public/signatures/

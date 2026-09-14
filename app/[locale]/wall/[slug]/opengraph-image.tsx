@@ -1,6 +1,9 @@
 import { ImageResponse } from 'next/og'
+import { readFile } from 'fs/promises'
+import path from 'path'
 import { prisma } from '@/lib/db'
-import { PAPER, INK, VIOLET, YELLOW, LIME, MAGENTA, MUTED, SITE, resolveAvatar, makeQr, loadCardFonts, Star, Spark, Heart, Shout } from '@/lib/og-shared'
+import { PAPER as BASE_PAPER, INK as BASE_INK, VIOLET as BASE_VIOLET, YELLOW as BASE_YELLOW, LIME as BASE_LIME, MAGENTA as BASE_MAGENTA, MUTED, SITE, resolveAvatar, makeQr, loadCardFonts, Star, Spark, Heart, Shout } from '@/lib/og-shared'
+import { getWallSignature } from '@/lib/wall-signature'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -33,10 +36,29 @@ export default async function Image({ params }: { params: Promise<{ slug: string
   const cta = isFr ? 'Laisse ton mot →' : 'Add your note →'
   const scanLabel = isFr ? 'SCANNE-MOI' : 'SCAN ME'
 
+  // Mur signature : la photo de couverture remplace l'avatar et la palette est la sienne.
+  const signature = getWallSignature(slug)
+  const PAPER = signature?.og.paper ?? BASE_PAPER
+  const INK = signature?.og.ink ?? BASE_INK
+  const VIOLET = signature?.og.accent ?? BASE_VIOLET
+  const YELLOW = signature?.og.badge ?? BASE_YELLOW
+  const LIME = signature?.og.badge ?? BASE_LIME
+  const MAGENTA = signature?.og.heart ?? BASE_MAGENTA
+
+  async function resolveCover(): Promise<{ url: string; fit: 'cover' | 'contain' }> {
+    if (signature) {
+      try {
+        const buf = await readFile(path.join(process.cwd(), 'public', signature.cover.src))
+        return { url: `data:image/jpeg;base64,${buf.toString('base64')}`, fit: 'cover' }
+      } catch {}
+    }
+    return resolveAvatar(wall?.user.image ?? null, pseudo)
+  }
+
   const wallUrl = `${SITE}/${locale}/wall/${slug}`
   const [qr, avatar, fonts] = await Promise.all([
     makeQr(wallUrl),
-    resolveAvatar(wall?.user.image ?? null, pseudo),
+    resolveCover(),
     loadCardFonts(),
   ])
 
@@ -77,7 +99,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
                 src={avatar.url}
                 width={168}
                 height={168}
-                style={{ width: 168, height: 168, borderRadius: 84, border: `5px solid ${INK}`, objectFit: avatar.fit, background: YELLOW, transform: 'rotate(-3deg)' }}
+                style={{ width: 168, height: 168, borderRadius: signature ? 28 : 84, border: `5px solid ${INK}`, objectFit: avatar.fit, background: YELLOW, transform: 'rotate(-3deg)', boxShadow: signature ? `8px 8px 0 ${INK}` : undefined }}
               />
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                 <div style={{ display: 'flex', width: '100%', marginBottom: 8 }}>
