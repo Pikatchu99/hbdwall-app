@@ -57,6 +57,8 @@ interface Props {
   prompts?: string[]
   /** Vocal « merci » joué après l'envoi (murs signature). */
   thanksAudio?: string
+  /** Proposer de souffler une bougie après l'envoi (la bougie flottante est sur la page). */
+  candle?: boolean
 }
 
 const ROTATIONS = [-1.5, 1, -0.5, 1.5, -1, 0.5, -1.5, 1, 0, -0.5]
@@ -64,7 +66,7 @@ const PIN_COLORS = ['#7B61FF', '#111111', '#CCCCCC', '#111111', '#7B61FF', '#CCC
 // Teintes "sticker" tournantes pour les messages invités (joyeux ; sans effet en classique).
 const TINTS = ['tint-yellow', 'tint-lime', 'tint-violet', 'tint-magenta', 'tint-blue']
 
-export default function WallClient({ wallSlug, initialMessages, ownerName, isAdmin = false, isOwner = false, instagramPostUrl: initialInstagramUrl = null, prompts, thanksAudio }: Props) {
+export default function WallClient({ wallSlug, initialMessages, ownerName, isAdmin = false, isOwner = false, instagramPostUrl: initialInstagramUrl = null, prompts, thanksAudio, candle = false }: Props) {
   const [messages, setMessages] = useState(initialMessages)
   const [adminContent, setAdminContent] = useState('')
   const [adminLoading, setAdminLoading] = useState(false)
@@ -139,7 +141,7 @@ export default function WallClient({ wallSlug, initialMessages, ownerName, isAdm
             {t('leaveMessageSubtitle')}
           </p>
           <div style={{ maxWidth: '480px' }}>
-            <MessageForm wallSlug={wallSlug} recipientName={ownerName} onSuccess={refresh} isOwner={isOwner} prompts={prompts} thanksAudio={thanksAudio} />
+            <MessageForm wallSlug={wallSlug} recipientName={ownerName} onSuccess={refresh} isOwner={isOwner} prompts={prompts} thanksAudio={thanksAudio} candle={candle} />
           </div>
         </div>
       )}

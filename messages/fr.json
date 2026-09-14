@@ -192,6 +192,7 @@
     "ctaSubtext": "Gratuit, 30 secondes. Tes amis le remplissent, tu gardes le collage.",
     "yourTurn": "À ton tour de recevoir des messages",
     "addAnother": "+ Ajouter un autre message",
+    "blowCandle": "Souffle une bougie pour {name}",
     "shareWithFriends": "Invite ses amis →"
   },
   "collage": {
@@ -502,5 +503,21 @@
     "download": "Télécharger la carte",
     "share": "Partager la carte",
     "loading": "Génération de ta carte…"
+  },
+  "candle": {
+    "title": "Souffle une bougie pour {name}",
+    "subtitle": "Ferme les yeux, fais un vœu pour {name}, et souffle. Le micro ne sert qu'à sentir le souffle, rien n'est enregistré.",
+    "cta": "Souffler la bougie",
+    "starting": "Une seconde…",
+    "listening": "Je t'écoute… souffle !",
+    "tapHint": "Ou appuie sur la bougie",
+    "fallback": "Le micro n'a pas voulu : appuie sur la bougie pour souffler.",
+    "blown": "Ton vœu est parti ✦",
+    "blownHint": "La bougie se rallumera pour la prochaine personne.",
+    "count": "{count, plural, =0 {Aucune bougie soufflée pour l'instant} one {# bougie soufflée} other {# bougies soufflées}}",
+    "open": "Souffler une bougie",
+    "close": "Fermer",
+    "aria": "Bougie allumée, appuie pour souffler",
+    "ariaOut": "Bougie soufflée"
   }
 }

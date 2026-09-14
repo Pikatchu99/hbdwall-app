@@ -11,6 +11,7 @@ import Avatar from '@/components/Avatar'
 import BirthdayCountdown from '@/components/BirthdayCountdown'
 import InstagramCard from '@/components/InstagramCard'
 import WallCover from '@/components/WallCover'
+import CandleBlow from '@/components/CandleBlow'
 import { getWallSignature, signatureCssVars, pickLocale } from '@/lib/wall-signature'
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string; locale: string }> }): Promise<Metadata> {
@@ -205,6 +206,10 @@ export default async function WallPage({
       </div>
       )}
 
+      {isCurrentYear && (
+        <CandleBlow wallSlug={slug} name={recipientName} initialCount={wall.candlesBlown} />
+      )}
+
       <div style={{ flex: 1, maxWidth: '780px', margin: '0 auto', width: '100%', padding: 'var(--s-8) var(--s-6)' }}>
         <WallClient
           wallSlug={slug}
@@ -215,6 +220,7 @@ export default async function WallPage({
           instagramPostUrl={wall.instagramPost?.url}
           prompts={signature?.prompts[sigLocale]}
           thanksAudio={signature?.thanksAudio}
+          candle={isCurrentYear}
         />
       </div>
 

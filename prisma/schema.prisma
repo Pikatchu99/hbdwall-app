@@ -79,6 +79,7 @@ model Wall {
   isBirthday        Boolean        @default(true)
   isActive          Boolean        @default(true)
   featured          Boolean        @default(false)
+  candlesBlown      Int            @default(0)
   instagramPostId   String?
   instagramPost     InstagramPost? @relation(fields: [instagramPostId], references: [id], onDelete: SetNull)
   createdAt         DateTime       @default(now())
