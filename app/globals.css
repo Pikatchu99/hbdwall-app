@@ -845,3 +845,196 @@ textarea.input     { min-height: 100px; resize: vertical; }
 
 /* Toggle de thème : icône seule sur mobile (évite le débordement des navbars) */
 @media (max-width: 520px) { .tt-label { display: none; } }
+
+/* ============================================================
+   Murs « signature » (lib/wall-signature.ts) : palette propre via variables
+   inline sur <main> + hero « bannière » (photo horizontale, portrait collé
+   dessus). Respecte le thème du visiteur : tout est tokenisé, le classique
+   reste classique, le joyeux reste joyeux. N'affecte aucun autre mur.
+   ============================================================ */
+.wall-signature { background: var(--bg); color: var(--fg); }
+.wall-signature {
+  --sig-strong:   var(--border-strong);
+  --sig-hl:       color-mix(in oklch, var(--accent) 32%, var(--bg));
+  --sig-badge-bg: var(--fg);
+  --sig-badge-fg: var(--bg);
+  --sig-badge-r:  var(--radius);
+  --sig-chip-r:   var(--radius);
+  --sig-tape:     color-mix(in oklch, var(--bg) 82%, transparent);
+  --sig-d1: var(--bg);       /* doodles en classique : monochrome + accent */
+  --sig-d2: var(--accent);
+  --sig-d3: var(--fg);
+}
+[data-theme="joyful"] .wall-signature {
+  /* Re-dérive les tokens pont depuis les --v-* surchargés inline (les custom
+     properties sont résolues là où elles sont définies, pas là où on les lit). */
+  --bg: var(--v-paper); --fg: var(--v-ink); --border: var(--v-ink); --border-strong: var(--v-ink);
+  --sig-strong:   var(--v-ink);
+  --sig-hl:       var(--v-yellow);
+  --sig-badge-bg: var(--v-yellow);
+  --sig-badge-fg: var(--v-ink);
+  --sig-badge-r:  999px;
+  --sig-chip-r:   18px;
+  --sig-tape:     color-mix(in oklch, var(--v-yellow) 78%, transparent);
+  --sig-d1: var(--v-yellow);
+  --sig-d2: var(--v-magenta);
+  --sig-d3: var(--v-violet);
+}
+
+.sig-cover {
+  position: relative;
+  overflow: hidden;
+  padding: var(--s-6) var(--s-6) var(--s-8);
+  border-bottom: var(--border-w) solid var(--border);
+}
+
+/* Bannière horizontale, pleine largeur (max 1100px), façon chaîne/profil. */
+.sig-banner-wrap { position: relative; max-width: 1100px; margin: 0 auto; }
+.sig-banner {
+  display: block; width: 100%; aspect-ratio: 3 / 2; object-fit: cover;
+  border: var(--border-w) solid var(--sig-strong); border-radius: var(--radius);
+  box-shadow: var(--shadow); background: var(--surface);
+}
+@media (min-width: 720px) { .sig-banner { aspect-ratio: 2.6 / 1; } }
+
+/* Portrait collé en bas à gauche, à cheval sur la bannière. */
+.sig-profile {
+  position: absolute; left: var(--s-4); bottom: 0; width: 34%; max-width: 240px; margin: 0;
+  transform: translateY(42%) rotate(-3deg);
+}
+@media (min-width: 720px) { .sig-profile { left: var(--s-8); width: 22%; } }
+.sig-profile img {
+  display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover;
+  border: var(--border-w) solid var(--sig-strong); border-radius: var(--radius);
+  box-shadow: var(--shadow); background: var(--surface);
+}
+
+/* Photo secondaire, petit carré collé à droite. */
+.sig-extra {
+  position: absolute; right: 4%; bottom: 0; width: 20%; max-width: 160px; margin: 0;
+  transform: translateY(35%) rotate(5deg);
+}
+@media (min-width: 720px) { .sig-extra { right: 5%; width: 13%; } }
+.sig-extra img {
+  display: block; width: 100%; aspect-ratio: 1; object-fit: cover;
+  border: var(--border-w) solid var(--sig-strong); border-radius: var(--radius);
+  box-shadow: var(--shadow); background: var(--surface);
+}
+
+.sig-badge {
+  position: absolute; display: inline-flex; align-items: center;
+  font-family: var(--font-display); font-weight: 800; font-size: 14px; line-height: 1;
+  padding: 8px 14px; border: var(--border-w) solid var(--sig-strong); border-radius: var(--sig-badge-r);
+  box-shadow: var(--shadow); background: var(--sig-badge-bg); color: var(--sig-badge-fg); white-space: nowrap;
+}
+.sig-badge--date {
+  top: var(--s-4); right: var(--s-6); transform: rotate(4deg);
+  flex-direction: column; gap: 2px; padding: 10px 14px 9px; border-radius: var(--sig-chip-r);
+}
+.sig-badge--date b { font-size: 34px; line-height: .9; }
+.sig-badge--date small { font-family: var(--font-mono); font-size: 9px; letter-spacing: .14em; text-transform: uppercase; }
+.sig-badge--count { top: -12px; right: -14px; transform: rotate(6deg); background: var(--accent); color: var(--accent-ink); }
+
+/* Corps : sur PC, une colonne vide sous le portrait, le texte à droite. */
+.sig-body {
+  max-width: 1100px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr;
+  padding-top: calc(var(--s-16) + 4vw);
+}
+@media (min-width: 720px) {
+  .sig-body { grid-template-columns: 22% minmax(0, 1fr); column-gap: var(--s-12); padding-top: var(--s-8); padding-left: var(--s-8); }
+  .sig-text { grid-column: 2; }
+}
+.sig-text { min-width: 0; max-width: 640px; }
+.sig-topline { display: flex; justify-content: space-between; align-items: center; gap: var(--s-4); flex-wrap: wrap; margin-bottom: var(--s-3); }
+.sig-eyebrow {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--fg-muted); margin: 0;
+}
+.sig-name {
+  font-family: var(--font-display); font-weight: var(--weight-display); letter-spacing: var(--tracking-display);
+  font-size: clamp(56px, 11vw, 112px); line-height: .92; color: var(--fg);
+  margin: 0 0 var(--s-4); overflow-wrap: anywhere;
+}
+.sig-name mark {
+  color: inherit; padding: 0 .06em;
+  background: linear-gradient(transparent 58%, var(--sig-hl) 58%, var(--sig-hl) 94%, transparent 94%);
+}
+.sig-desc { font-size: var(--fs-body); line-height: 1.7; color: var(--fg-muted); max-width: 44ch; margin: 0; }
+.sig-countdown { margin-top: var(--s-6); }
+.sig-countdown .countdown-wrap { border-bottom: none; }
+
+/* Doodles flottants : joyeux seulement (le classique n'en a pas). */
+.sig-doodle { display: none; }
+[data-theme="joyful"] .sig-doodle {
+  display: inline-flex; position: absolute; pointer-events: none;
+  animation: sig-float 6s ease-in-out infinite; transform: rotate(var(--rot, 0deg));
+}
+@keyframes sig-float {
+  0%, 100% { transform: translateY(0) rotate(var(--rot, 0deg)); }
+  50%      { transform: translateY(-10px) rotate(var(--rot, 0deg)); }
+}
+@media (prefers-reduced-motion: reduce) { [data-theme="joyful"] .sig-doodle { animation: none; } }
+
+/* Amorces d'écriture (formulaire invité) */
+.prompt-chips { display: flex; flex-wrap: wrap; gap: var(--s-2); margin-top: var(--s-3); }
+.prompt-chip {
+  font-family: var(--font-mono); font-size: 11px; line-height: 1.2; text-align: left;
+  padding: 6px 10px; border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--surface); color: var(--fg); cursor: pointer;
+}
+.prompt-chip:hover { border-color: var(--fg); }
+[data-theme="joyful"] .prompt-chip {
+  font-family: var(--round); font-weight: 700; font-size: 13px;
+  border: 2px solid var(--v-ink); border-radius: 999px; box-shadow: 2px 2px 0 var(--v-ink); background: #fff;
+  transition: transform .13s var(--ease), box-shadow .13s var(--ease);
+}
+[data-theme="joyful"] .prompt-chip:hover  { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--v-ink); background: var(--v-yellow); }
+[data-theme="joyful"] .prompt-chip:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--v-ink); }
+
+/* Teintes des cartes messages accordées à la palette signature (joyeux). */
+[data-theme="joyful"] .wall-signature .tint-yellow  { background: color-mix(in oklch, var(--v-yellow) 42%, white); }
+[data-theme="joyful"] .wall-signature .tint-lime    { background: color-mix(in oklch, var(--v-yellow) 22%, white); }
+[data-theme="joyful"] .wall-signature .tint-violet  { background: color-mix(in oklch, var(--v-violet) 16%, white); }
+[data-theme="joyful"] .wall-signature .tint-magenta { background: color-mix(in oklch, var(--v-magenta) 18%, white); }
+[data-theme="joyful"] .wall-signature .tint-blue    { background: color-mix(in oklch, var(--v-blue) 12%, white); }
+
+/* Cadre de la bannière : coupe le ruban aux coins arrondis. */
+.sig-banner-frame { position: relative; overflow: hidden; border-radius: var(--radius); }
+.sig-ribbon {
+  position: absolute; top: 22px; left: -70px; width: 320px; padding: 6px 0;
+  display: flex; justify-content: center; gap: 12px; white-space: nowrap;
+  transform: rotate(-32deg); transform-origin: center;
+  background: var(--accent); color: var(--accent-ink);
+  border-top: 2px solid var(--sig-strong); border-bottom: 2px solid var(--sig-strong);
+  font-family: var(--font-display); font-weight: 800; font-size: 12px; letter-spacing: .1em; text-transform: uppercase;
+}
+@media (min-width: 720px) { .sig-ribbon { top: 34px; left: -60px; width: 380px; font-size: 14px; padding: 8px 0; } }
+
+/* Scotch : bandes translucides, légèrement striées, aux coins. */
+.sig-tape {
+  position: absolute; width: 92px; height: 26px;
+  background: var(--sig-tape);
+  background-image: repeating-linear-gradient(90deg, transparent 0 6px, rgba(255,255,255,.28) 6px 8px);
+  border: 1.5px solid color-mix(in oklch, var(--sig-strong) 55%, transparent);
+  box-shadow: 2px 2px 0 color-mix(in oklch, var(--sig-strong) 35%, transparent);
+}
+@media (min-width: 720px) { .sig-tape { width: 120px; height: 32px; } }
+.sig-tape--tl { top: -12px; left: 8%;  transform: rotate(-7deg); }
+.sig-tape--tr { top: -10px; right: 30%; transform: rotate(5deg); }
+.sig-tape--br { bottom: -12px; right: 28%; transform: rotate(-4deg); }
+
+/* Stickers dessinés : ombre dure qui suit la forme, petite rotation. */
+.sig-sticker { position: absolute; display: inline-flex; pointer-events: none; filter: drop-shadow(3px 3px 0 var(--sig-strong)); }
+.sig-sticker--crown    { top: 2%; left: 43%; transform: rotate(-9deg); }
+.sig-sticker--star1    { top: 50%; left: 5%;  transform: rotate(12deg); }
+.sig-sticker--star2    { top: 62%; right: 8%; transform: rotate(-14deg); }
+.sig-sticker--heart    { bottom: 12%; right: 30%; transform: rotate(10deg); }
+.sig-sticker--sparkle  { top: 12%; left: 24%;  transform: rotate(6deg); }
+.sig-sticker--confetti { top: 40%; right: 22%; transform: rotate(-6deg); }
+@media (max-width: 719px) {
+  .sig-sticker svg { width: 70%; height: auto; }
+  .sig-tape--tl { display: none; }
+  .sig-sticker--crown { top: 4%; left: 42%; }
+  .sig-sticker--sparkle, .sig-sticker--confetti { display: none; }
+}

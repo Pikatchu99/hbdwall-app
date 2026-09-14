@@ -11,9 +11,13 @@ interface Props {
   recipientName: string
   onSuccess: () => void
   isOwner?: boolean
+  /** Amorces d'écriture : placeholder tournant + puces cliquables (murs signature). */
+  prompts?: string[]
+  /** Vocal joué une fois le message envoyé (murs signature). */
+  thanksAudio?: string
 }
 
-export default function MessageForm({ wallSlug, recipientName, onSuccess, isOwner = false }: Props) {
+export default function MessageForm({ wallSlug, recipientName, onSuccess, isOwner = false, prompts, thanksAudio }: Props) {
   const t = useTranslations('messageForm')
   const [form, setForm] = useState({ authorName: '', content: '' })
   const [file, setFile] = useState<File | null>(null)
@@ -21,6 +25,39 @@ export default function MessageForm({ wallSlug, recipientName, onSuccess, isOwne
   const [error, setError] = useState('')
   const [done, setDone] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
+  const textRef = useRef<HTMLTextAreaElement>(null)
+  const [promptIndex, setPromptIndex] = useState(0)
+  const thanksRef = useRef<HTMLAudioElement | null>(null)
+
+  // Précharge le vocal pour qu'il parte sans latence après l'envoi.
+  useEffect(() => {
+    if (!thanksAudio) return
+    const a = new Audio(thanksAudio)
+    a.preload = 'auto'
+    thanksRef.current = a
+    return () => { a.pause(); thanksRef.current = null }
+  }, [thanksAudio])
+
+  // Débloque la lecture pendant le clic (Safari/iOS exigent un geste), puis
+  // laisse l'appel réseau se faire ; le vrai play() a lieu au succès.
+  function unlockThanks() {
+    const a = thanksRef.current
+    if (!a) return
+    a.muted = true
+    a.play().then(() => { a.pause(); a.currentTime = 0; a.muted = false }).catch(() => { a.muted = false })
+  }
+
+  // Le placeholder tourne parmi les amorces tant que le champ est vide.
+  useEffect(() => {
+    if (!prompts?.length || form.content) return
+    const id = setInterval(() => setPromptIndex(i => (i + 1) % prompts.length), 3500)
+    return () => clearInterval(id)
+  }, [prompts, form.content])
+
+  function usePrompt(p: string) {
+    setForm(f => ({ ...f, content: f.content ? `${f.content.trimEnd()}\n${p} ` : `${p} ` }))
+    textRef.current?.focus()
+  }
 
   useEffect(() => {
     if (done) {
@@ -31,6 +68,7 @@ export default function MessageForm({ wallSlug, recipientName, onSuccess, isOwne
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!form.content.trim()) return
+    unlockThanks()
     setLoading(true)
     setError('')
     try {
@@ -46,6 +84,7 @@ export default function MessageForm({ wallSlug, recipientName, onSuccess, isOwne
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Erreur')
       setDone(true)
+      thanksRef.current?.play().catch(() => {})
       setForm({ authorName: '', content: '' })
       setFile(null)
       track('message_submitted', { wallSlug, hasPhoto: !!file })
@@ -104,13 +143,23 @@ export default function MessageForm({ wallSlug, recipientName, onSuccess, isOwne
           {t('message')} *
         </label>
         <textarea
+          ref={textRef}
           className="input"
-          placeholder={t('messagePlaceholder')}
+          placeholder={prompts?.length ? prompts[promptIndex] : t('messagePlaceholder')}
           rows={4}
           value={form.content}
           onChange={e => setForm(f => ({ ...f, content: e.target.value }))}
           required
         />
+        {prompts && prompts.length > 0 && (
+          <div className="prompt-chips" aria-label="Idées">
+            {prompts.slice(0, 3).map(p => (
+              <button key={p} type="button" className="prompt-chip" onClick={() => usePrompt(p)}>
+                {p}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       <div>

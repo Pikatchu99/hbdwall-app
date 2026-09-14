@@ -10,6 +10,8 @@ import WishlistButton from '@/components/WishlistButton'
 import Avatar from '@/components/Avatar'
 import BirthdayCountdown from '@/components/BirthdayCountdown'
 import InstagramCard from '@/components/InstagramCard'
+import WallCover from '@/components/WallCover'
+import { getWallSignature, signatureCssVars, pickLocale } from '@/lib/wall-signature'
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string; locale: string }> }): Promise<Metadata> {
   const { slug, locale } = await params
@@ -34,12 +36,14 @@ export default async function WallPage({
   params,
   searchParams,
 }: {
-  params: Promise<{ slug: string }>
+  params: Promise<{ slug: string; locale: string }>
   searchParams: Promise<{ year?: string }>
 }) {
-  const { slug } = await params
+  const { slug, locale } = await params
   const { year: yearParam } = await searchParams
   const t = await getTranslations('wall')
+  const signature = getWallSignature(slug)
+  const sigLocale = pickLocale(locale)
 
   const wall = await prisma.wall.findUnique({
     where: { slug },
@@ -99,8 +103,14 @@ export default async function WallPage({
     pinnedAt: m.pinnedAt?.toISOString() ?? null,
   }))
 
+  const dateLabel = new Date(wall.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })
+  const guestCount = messages.filter(m => !m.fromPlatform).length
+
   return (
-    <main style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <main
+      className={signature ? 'wall-signature' : undefined}
+      style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', ...(signature ? signatureCssVars(signature) : {}) } as React.CSSProperties}
+    >
       <nav style={{
         display: 'flex',
         justifyContent: 'space-between',
@@ -134,6 +144,26 @@ export default async function WallPage({
         </div>
       )}
 
+      {signature ? (
+        <WallCover
+          signature={signature}
+          name={recipientName}
+          dateLabel={dateLabel}
+          eyebrow={`${dateLabel} · ${signature.eyebrow[sigLocale]}`}
+          description={wall.description || t('leaveMessage')}
+          messageCount={guestCount}
+          countLabel={sigLocale === 'en'
+            ? `${guestCount} ${guestCount > 1 ? 'notes' : 'note'} already`
+            : `${guestCount} ${guestCount > 1 ? 'mots' : 'mot'} déjà`}
+          countdown={<BirthdayCountdown date={wall.date.toISOString()} name={recipientName} />}
+          wishlist={
+            <WishlistButton
+              ownerName={recipientName}
+              items={wishlistItems.map(i => ({ id: i.id, title: i.title, url: i.url, price: i.price }))}
+            />
+          }
+        />
+      ) : (
       <div style={{
         padding: 'var(--s-16) var(--s-6) var(--s-8)',
         borderBottom: 'var(--border-w) solid var(--border)',
@@ -143,9 +173,7 @@ export default async function WallPage({
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 'var(--s-4)', marginBottom: 'var(--s-4)', flexWrap: 'wrap' }}>
           <p className="t-label t-muted" style={{ margin: 0 }}>
-            {new Date(wall.date).toLocaleDateString('fr-FR', {
-              day: 'numeric', month: 'long',
-            })}
+            {dateLabel}
           </p>
           <WishlistButton
             ownerName={recipientName}
@@ -168,6 +196,7 @@ export default async function WallPage({
           </div>
         )}
       </div>
+      )}
 
       <div style={{ flex: 1, maxWidth: '780px', margin: '0 auto', width: '100%', padding: 'var(--s-8) var(--s-6)' }}>
         <WallClient
@@ -177,6 +206,8 @@ export default async function WallPage({
           isAdmin={isAdmin}
           isOwner={isOwner}
           instagramPostUrl={wall.instagramPost?.url}
+          prompts={signature?.prompts[sigLocale]}
+          thanksAudio={signature?.thanksAudio}
         />
       </div>
 
