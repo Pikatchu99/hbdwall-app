@@ -937,6 +937,7 @@ textarea.input     { min-height: 100px; resize: vertical; }
 
 /* Corps : sur PC, une colonne vide sous le portrait, le texte à droite. */
 .sig-body {
+  position: relative; z-index: 2; /* au-dessus des stickers qui débordent de la bannière */
   max-width: 1100px; margin: 0 auto;
   display: grid; grid-template-columns: 1fr;
   padding-top: calc(var(--s-16) + 4vw);
@@ -946,11 +947,12 @@ textarea.input     { min-height: 100px; resize: vertical; }
   .sig-text { grid-column: 2; }
 }
 .sig-text { min-width: 0; max-width: 640px; }
-.sig-topline { display: flex; justify-content: space-between; align-items: center; gap: var(--s-4); flex-wrap: wrap; margin-bottom: var(--s-3); }
 .sig-eyebrow {
   font-family: var(--font-mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
-  color: var(--fg-muted); margin: 0;
+  color: var(--fg-muted); margin: 0 0 var(--s-3);
 }
+.sig-actions { display: flex; flex-wrap: wrap; gap: var(--s-3); margin-top: var(--s-4); }
+.sig-actions:empty { display: none; }
 .sig-name {
   font-family: var(--font-display); font-weight: var(--weight-display); letter-spacing: var(--tracking-display);
   font-size: clamp(56px, 11vw, 112px); line-height: .92; color: var(--fg);
