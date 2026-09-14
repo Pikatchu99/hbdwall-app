@@ -18,9 +18,14 @@ export function openCandle() {
   window.dispatchEvent(new CustomEvent(OPEN_CANDLE_EVENT))
 }
 
-// Une bougie soufflée par visiteur et par jour : on s'en souvient côté client.
+// Après un souffle, la bougie se rallume au bout d'un délai (anti-mitraillage) ;
+// l'heure du dernier souffle est mémorisée côté client.
+const RELIGHT_MS = 60_000
 function storageKey(slug: string) {
-  return `hbd-candle-${slug}-${new Date().toISOString().slice(0, 10)}`
+  return `hbd-candle-${slug}`
+}
+function lastBlowAt(slug: string): number {
+  try { return Number(localStorage.getItem(storageKey(slug)) || 0) } catch { return 0 }
 }
 
 function CandleSvg({ wind }: { wind: number }) {
@@ -48,7 +53,8 @@ function CandleSvg({ wind }: { wind: number }) {
  * au tap, une fenêtre avec la grande flamme. Le visiteur fait un vœu pour la
  * personne fêtée et souffle dans son micro ; la flamme s'éteint et le compteur
  * du mur augmente. Détection = énergie du signal (RMS) comparée au bruit
- * ambiant, adaptée du projet honey. Repli tactile si le micro est refusé.
+ * ambiant, adaptée du projet honey. On souffle, on ne clique pas : sans
+ * micro, la bougie reste allumée et on peut simplement passer son chemin.
  */
 export default function CandleBlow({ wallSlug, name, initialCount }: Props) {
   const t = useTranslations('candle')
@@ -56,6 +62,7 @@ export default function CandleBlow({ wallSlug, name, initialCount }: Props) {
   const [count, setCount] = useState(initialCount)
   const [phase, setPhase] = useState<Phase>('idle')
   const [wind, setWind] = useState(0)
+  const [relightIn, setRelightIn] = useState(0)
   const streamRef = useRef<MediaStream | null>(null)
   const ctxRef = useRef<AudioContext | null>(null)
   const rafRef = useRef(0)
@@ -73,11 +80,30 @@ export default function CandleBlow({ wallSlug, name, initialCount }: Props) {
   }, [])
 
   useEffect(() => {
-    try { if (localStorage.getItem(storageKey(wallSlug))) { blownRef.current = true; setPhase('blown') } } catch {}
+    if (Date.now() - lastBlowAt(wallSlug) < RELIGHT_MS) { blownRef.current = true; setPhase('blown') }
     const onOpen = () => setOpen(true)
     window.addEventListener(OPEN_CANDLE_EVENT, onOpen)
     return () => { window.removeEventListener(OPEN_CANDLE_EVENT, onOpen); stopMic() }
   }, [wallSlug, stopMic])
+
+  // Compte à rebours du rallumage, puis la bougie redevient soufflable.
+  useEffect(() => {
+    if (phase !== 'blown') return
+    const tick = () => {
+      const left = Math.ceil((lastBlowAt(wallSlug) + RELIGHT_MS - Date.now()) / 1000)
+      if (left <= 0) {
+        blownRef.current = false
+        setRelightIn(0)
+        setPhase('idle')
+        try { localStorage.removeItem(storageKey(wallSlug)) } catch {}
+        return
+      }
+      setRelightIn(left)
+    }
+    tick()
+    const id = setInterval(tick, 1000)
+    return () => clearInterval(id)
+  }, [phase, wallSlug])
 
   // Fermer : on coupe le micro et on remet l'invitation si rien n'a été soufflé.
   const close = useCallback(() => {
@@ -93,13 +119,13 @@ export default function CandleBlow({ wallSlug, name, initialCount }: Props) {
     return () => window.removeEventListener('keydown', onKey)
   }, [open, close])
 
-  async function blow(via: 'mic' | 'tap') {
+  async function blow() {
     if (blownRef.current) return
     blownRef.current = true
     stopMic()
     setPhase('blown')
-    try { localStorage.setItem(storageKey(wallSlug), '1') } catch {}
-    track('candle_blown', { wallSlug, via })
+    try { localStorage.setItem(storageKey(wallSlug), String(Date.now())) } catch {}
+    track('candle_blown', { wallSlug })
     try {
       const res = await fetch(`/api/walls/${wallSlug}/candles`, { method: 'POST' })
       const data = res.ok ? await res.json() : null
@@ -142,7 +168,7 @@ export default function CandleBlow({ wallSlug, name, initialCount }: Props) {
         setWind(w * w)
         const dt = now - last
         last = now
-        if (rms > thr) { above += dt; if (above > 180) { blow('mic'); return } }
+        if (rms > thr) { above += dt; if (above > 180) { blow(); return } }
         else above = Math.max(0, above - dt * 0.5)
         rafRef.current = requestAnimationFrame(loop)
       }
@@ -154,7 +180,6 @@ export default function CandleBlow({ wallSlug, name, initialCount }: Props) {
   }
 
   const isOut = phase === 'blown'
-  const canTap = phase === 'fallback' || phase === 'listening'
 
   return (
     <>
@@ -183,19 +208,17 @@ export default function CandleBlow({ wallSlug, name, initialCount }: Props) {
               <X size={18} />
             </button>
 
-            <button
-              type="button"
+            <div
               className={`candle candle--big${isOut ? ' is-out' : ''}${phase === 'listening' ? ' is-listening' : ''}`}
-              onClick={() => { if (canTap) blow('tap') }}
-              disabled={isOut || phase === 'idle' || phase === 'starting'}
+              role="img"
               aria-label={isOut ? t('ariaOut') : t('aria')}
             >
               <CandleSvg wind={wind} />
-            </button>
+            </div>
 
             <h2 id="candle-title" className="t-h3">{t('title', { name })}</h2>
             <p className="t-small t-muted candle-sub">
-              {isOut ? t('blownHint') : phase === 'fallback' ? t('fallback') : t('subtitle', { name })}
+              {isOut ? t('blownHint', { seconds: relightIn }) : phase === 'fallback' ? t('fallback') : t('subtitle', { name })}
             </p>
             <p className="candle-count" aria-live="polite">{t('count', { count })}</p>
 
@@ -205,9 +228,12 @@ export default function CandleBlow({ wallSlug, name, initialCount }: Props) {
             {phase === 'starting' && (
               <button type="button" className="btn btn--solid" disabled>{t('starting')}</button>
             )}
+            {phase === 'fallback' && (
+              <button type="button" className="btn btn--ghost" onClick={startMic}>{t('retry')}</button>
+            )}
             {phase === 'listening' && (
               <p className="candle-status">
-                <span className="candle-dot" aria-hidden /> {t('listening')} <span className="t-muted">· {t('tapHint')}</span>
+                <span className="candle-dot" aria-hidden /> {t('listening')}
               </p>
             )}
             {isOut && <p className="candle-status candle-status--done">{t('blown')}</p>}
