@@ -161,7 +161,7 @@ export default function CandleBlow({ wallSlug, name, initialCount }: Props) {
       {/* Bougie flottante : toujours visible, ne prend aucune place dans la page. */}
       <button
         type="button"
-        className={`candle-fab${isOut ? ' is-out' : ''}`}
+        className="candle-fab"
         onClick={() => setOpen(true)}
         aria-label={t('open')}
         aria-haspopup="dialog"
